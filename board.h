@@ -31,11 +31,13 @@ class Board{
 
     int getX(){return x;};
     int getY(){return y;};
+    //string getYAlpha(){return nth_letter(y);};
 
     void setBoard(int userX, int userY){
       y = userY;
       x = userX;
     }
+
 
     void generateBoard(){
       vector<string> lineCreate;

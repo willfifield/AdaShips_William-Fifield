@@ -2,6 +2,10 @@
 #include <limits>
 #include <vector>
 #include <assert.h>
+#include <algorithm>
+#include <cctype>
+
+
 #include "player.h"
 
 using namespace std;
@@ -14,7 +18,7 @@ void printMenu(vector<string> choices){
   cout << "\n\nPlease enter one of the options below:\n";
   int count = 1;
   for (string choice : choices){
-    if (choice == "Quit"){
+    if (choice == "Quit" || choice == "Back"){
       cout <<"0: " << choice << "\n";
     }
     else{
@@ -24,20 +28,19 @@ void printMenu(vector<string> choices){
   }
 }
 
-
-
-
 int userNumberInput(){
   int userChoice;
   bool inputCheck = false;
   do{
     cin.clear();
-    cin >> userChoice;
-    if (isdigit(userChoice)){
+    if (cin >> userChoice){
       inputCheck = true;
+      break;
     }
     else{
       cout <<"\nPlease enter a valid digit:\n";
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
   }while(!inputCheck);
   return userChoice;
@@ -48,8 +51,9 @@ int collectX(Player currentPlayer){
   int userChoice;
   do{
     cout << "\nPlease enter your X coordinates (1,2,3...): ";
-    cin.clear();
-    cin >> userChoice;
+
+    userChoice = userNumberInput();
+
     if(userChoice >= 1 && userChoice <= currentPlayer.getX()){
       inputCheck=true;
     }
@@ -60,31 +64,89 @@ int collectX(Player currentPlayer){
   return userChoice;
 }
 
-void userCoords(Player currentPlayer){
-  collectX(currentPlayer);
+bool isLetters(string input)
+{
+	for (int i = 0; i < input.size(); i++)
+	{
+		int uppercaseChar = toupper(input[i]); //converting the character to upper case
+		if (uppercaseChar < 'A' || uppercaseChar > 'Z') //if character is not A-Z
+		{
+			return false;
+		}
+	}
+	return true; //Return true if characters within A-Z
 }
 
-void placeShip(int length){
-  
+string uppercaseConvert(string toConvert){
+  string converted = toConvert;
+  transform(converted.begin(), converted.end(), converted.begin(),[](unsigned char c){ return toupper(c);});
+  return converted;
+}
+
+
+string collectY(Player currentPlayer){
+  bool inputCheck = false;
+  string userChoice;
+  do{
+    cout << "\nPlease enter your Y coordinates (A,B,C...): ";
+
+    cin.ignore();
+    getline(cin,userChoice);
+
+    if(isLetters(userChoice)){
+      inputCheck=true;
+    }
+    else{
+      cout << "\nPlease enter a valid coordinate:";
+    }
+  }while (!inputCheck);
+  return uppercaseConvert(userChoice);
+}
+
+string collectOr(Player currentPlayer){
+  bool inputCheck = false;
+  string userChoice;
+  do{
+    cout << "\nPlease enter your Orientation Horizontal/Vertical (H / V): ";
+
+    getline(cin,userChoice);
+    cout <<userChoice;
+    userChoice = uppercaseConvert(userChoice);
+
+    if(isLetters(userChoice) && (userChoice == "H" || userChoice == "V")){
+      
+      inputCheck=true;
+    }
+    else{
+      cout << "\nPlease enter a valid orientation:";
+    }
+  }while (!inputCheck);
+  return userChoice;
+}
+
+void placeShip(string shipName, Player currentPlayer){
+  int playerX = collectX(currentPlayer);
+  string playerY = collectY(currentPlayer);
+  string playerOr = collectOr(currentPlayer);
+  currentPlayer.placeShip(playerX, playerY, shipName, playerOr);
 }
 
 
 void placeShipsMenu(Player currentPlayer){
-  string menuChoices[] = {"Place Carrier","Place Battleship", "Place Destroyer", "Place Submarine", "Place Patrol Boat", "Quit"};
+  string menuChoices[] = {"Place Carrier","Place Battleship", "Place Destroyer", "Place Submarine", "Place Patrol Boat", "Back"};
   int userChoice;
 
   do{
     cout << "\n\nPlace Ships\n\n";
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
-    
-    cin.clear();
-    cin >> userChoice;
+
+    userChoice = userNumberInput();
     
     switch(userChoice) {
 			case 1: 
         
-        //setupGame();
+        placeShip("carrier", currentPlayer);
         break;
       case 2: 
         
@@ -117,18 +179,16 @@ bool setupGame(){
   int userChoice;
   string menuChoices[] = {"Place ship myself","Auto-place", "Continue", "Reset", "Quit"};
   do{
-    clearScreen();
+    
     cout << "\n\nGame Set-up\n\n";
     userPlayer.printBoard();
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
     
-    cin.clear();
-    cin >> userChoice;
+    userChoice = userNumberInput();
     
     switch(userChoice) {
 			case 1: 
-        cout << "\nPlace Ships\n";
         placeShipsMenu(userPlayer);
         break;
       case 2: 
@@ -168,11 +228,11 @@ void mainMenu(){
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
 
-    cin.clear();
-    cin >> userChoice;
+    userChoice = userNumberInput();
     
     switch(userChoice) {
 			case 1: 
+        clearScreen();
         if(setupGame()){
           playGame();
         }
