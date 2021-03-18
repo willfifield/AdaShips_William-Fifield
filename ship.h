@@ -7,23 +7,25 @@ class Ship{
   string yCoord;
   int length;
   string orientation;
+  string shipName;
 
   public:
 
  
 
   void getDetails(){
-    cout <<"\nUser X: " << xCoord << "\nUser Y: " << yCoord << "\nOrientation: " << orientation <<"\n";
+    cout <<"\nUser X: " << xCoord << "\nUser Y: " << yCoord << "\nOrientation: " << orientation << "\nLength: " << length <<"\n";
   }
 
-  void generateShip(int userX, string userY, string shipType, string playerOr){
+  void generateShip(int userX, string userY, int shipLength, string playerOr, string name){
     xCoord = userX;
     yCoord = userY;
     orientation = playerOr;
-    if (shipType == "carrier"){
-      length = 5;
-    }
+    length = shipLength;
+    shipName = name;
   }
+
+  string getName(){return shipName;}
 
 
 };

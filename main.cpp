@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cctype>
 
-
+#include "ini.h"
 #include "player.h"
 
 using namespace std;
@@ -124,11 +124,37 @@ string collectOr(Player currentPlayer){
   return userChoice;
 }
 
+void GetSettingsFile(){
+  // create a file instance
+  mINI::INIFile file("adaship_config.ini");
+
+  // create a data structure
+  mINI::INIStructure ini;
+
+  // now we can read the file
+    file.read(ini);
+  //cout  ini;
+}
+
+int getShipLength(string shipName){
+  // create a file instance
+  mINI::INIFile file("adaship_config.ini");
+
+  // create a data structure
+  mINI::INIStructure ini;
+
+  // now we can read the file
+  file.read(ini);
+  
+  return stoi(ini["Ships"][shipName]);
+}
+
 void placeShip(string shipName, Player currentPlayer){
   int playerX = collectX(currentPlayer);
   string playerY = collectY(currentPlayer);
   string playerOr = collectOr(currentPlayer);
-  currentPlayer.placeShip(playerX, playerY, shipName, playerOr);
+  int shipLength = getShipLength(shipName);
+  currentPlayer.placeShip(playerX, playerY, shipLength, playerOr, shipName);
 }
 
 
@@ -145,19 +171,20 @@ void placeShipsMenu(Player currentPlayer){
     
     switch(userChoice) {
 			case 1: 
-        
         placeShip("carrier", currentPlayer);
         break;
       case 2: 
-        
-        //setupGame();
+        placeShip("battleship", currentPlayer);
         break;
       case 3: 
-        
-        //setupGame();
+        placeShip("destroyer", currentPlayer);
         break;
       case 4: 
-        
+        placeShip("submarine", currentPlayer);
+        break;
+      case 5: 
+        currentPlayer.printAllShips();
+        //placeShip("patrol_boat", currentPlayer);
         break;
 			case 0: 
         cout << "Exiting";
@@ -248,5 +275,6 @@ void mainMenu(){
 }
 
 int main() {
+  GetSettingsFile();
   mainMenu();
 }
