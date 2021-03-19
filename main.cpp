@@ -10,6 +10,9 @@
 
 using namespace std;
 
+vector<Player> playerList;
+vector<Ship> localShipList;
+
 void clearScreen(){
     cout << string( 100, '\n' );
   }
@@ -154,11 +157,12 @@ void placeShip(string shipName, Player currentPlayer){
   string playerY = collectY(currentPlayer);
   string playerOr = collectOr(currentPlayer);
   int shipLength = getShipLength(shipName);
-  currentPlayer.placeShip(playerX, playerY, shipLength, playerOr, shipName);
+  currentPlayer.addToList(Ship(playerX, playerY, shipLength, playerOr, shipName));
+  //localShipList.push_back(Ship(playerX, playerY, shipLength, playerOr, shipName));
 }
 
 
-void placeShipsMenu(Player currentPlayer){
+void placeShipsMenu(Player &currentPlayer){
   string menuChoices[] = {"Place Carrier","Place Battleship", "Place Destroyer", "Place Submarine", "Place Patrol Boat", "Back"};
   int userChoice;
 
@@ -180,10 +184,13 @@ void placeShipsMenu(Player currentPlayer){
         placeShip("destroyer", currentPlayer);
         break;
       case 4: 
-        placeShip("submarine", currentPlayer);
+        //placeShip("submarine", currentPlayer);
+        //currentPlayer.addNewShips(currentPlayer.getShipList());
         break;
       case 5: 
         currentPlayer.printAllShips();
+        
+        // currentPlayer.printAllShips(currentPlayer.getShipList());
         //placeShip("patrol_boat", currentPlayer);
         break;
 			case 0: 
@@ -199,8 +206,8 @@ void placeShipsMenu(Player currentPlayer){
 
 
 bool setupGame(){
-  Player userPlayer;
-  userPlayer.createBoard(10, 10);
+  playerList.push_back(Player(1,1,5,0));
+  playerList[0].createBoard(10, 10);
   
   bool continuePlay = false;
   int userChoice;
@@ -208,7 +215,7 @@ bool setupGame(){
   do{
     
     cout << "\n\nGame Set-up\n\n";
-    userPlayer.printBoard();
+    playerList[0].printBoard();
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
     
@@ -216,7 +223,7 @@ bool setupGame(){
     
     switch(userChoice) {
 			case 1: 
-        placeShipsMenu(userPlayer);
+        placeShipsMenu(playerList[0]);
         break;
       case 2: 
         cout << "\nAuto-place\n";
@@ -229,7 +236,7 @@ bool setupGame(){
         break;
       case 4: 
         cout << "\nReset\n";
-        userPlayer.resetBoard();
+        playerList[0].resetBoard();
         break;
 			case 0: 
         cout << "Exiting";
