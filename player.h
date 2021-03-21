@@ -37,36 +37,30 @@ class Player{
 
   void setBombs(int userBombs){bombs = userBombs;}
   int getBombs(){return bombs;}
+
+  vector<vector<string>> allShips(){
+    vector<vector<string>> temp;
+    for (Ship ship : shipList){
+      for(vector<string> coord : ship.getShipCoord()){
+      temp.push_back(coord);
+      }
+    }
+    return temp;
+  }
   
 
   void printBoard(){
-    playerBoard.printBoard();
-  }
-
-  void printAllShips(vector<Ship> newShipList){
-    cout <<"DEBUGGING\n";
-    cout << newShipList.size() << " SIZE\n";
-    newShipList.at(0).getDetails();
-    for(auto ship = newShipList.begin(); ship != newShipList.end(); ++ship){
-      cout <<"\nDEBUGGING2";
-      ship -> getDetails();
-    }
+    playerBoard.printBoard(allShips());
   }
 
   void printAllShips(){
-    cout <<"DEBUGGING\n";
-    cout << shipList.size() << " SIZE\n";
-    shipList.at(0).getDetails();
     for(auto ship = shipList.begin(); ship != shipList.end(); ++ship){
-      cout <<"\nDEBUGGING2";
       ship -> getDetails();
     }
   }
 
   void createBoard(int x, int y){
     playerBoard.setBoard(x,y);
-    playerBoard.generateBoard();
-    resetCopy = playerBoard;
   }
 
   void deleteShip(string shipName){
@@ -81,7 +75,6 @@ class Player{
 
   bool checkShipList(string shipName){
     for (Ship ship : shipList){
-      cout << "\nTHIS IS SHIP NAME" << ship.getName() <<"\n\n";
       if (ship.getName() == shipName){
         return false;//found in our list
       }
@@ -90,37 +83,12 @@ class Player{
   }
 
   void addToList(Ship newShip){
-    shipList.push_back(newShip);
-    shipList.at(0).getDetails();
-  }
-
-  void addNewShips(vector<Ship> newShipList){
-    
-    for (Ship ship : newShipList){
-      if(checkShipList(ship.getName())){
-        shipList.push_back(ship);
-      }
-      else{
-        cout << "\nUnable to place: " << ship.getName() << " as it already exists.\n";
-      }
-      
-    }
-  }
-
-  void placeShip(int x, string y, int shipLength, string orientation, string shipName){
-    
-    if (checkShipList(shipName)){
-      shipList.push_back(Ship(x, y, shipLength, orientation, shipName));
-      cout << "\ninside If\n";
-      //newShip.generateShip(x, y, shipLength, orientation, shipName);
-      
-      //newShip.getDetails();
-      shipList.at(0).getDetails();
-      printAllShips(shipList);
-      
+    if(checkShipList(newShip.getName())){
+      shipList.push_back(newShip);
+      newShip.getDetails();
     }
     else{
-      cout << "\nYou have already placed this ship";
+      cout << "\nUnable to place: " << newShip.getName() << " as it already exists.\n";
     }
   }
 

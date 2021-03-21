@@ -6,12 +6,15 @@
 #include <cctype>
 
 #include "ini.h"
+#include "helper.h"
 #include "player.h"
 
 using namespace std;
 
+Helper helper;
+
 vector<Player> playerList;
-vector<Ship> localShipList;
+vector<string> shipsAvalible;
 
 void clearScreen(){
     cout << string( 100, '\n' );
@@ -31,31 +34,13 @@ void printMenu(vector<string> choices){
   }
 }
 
-int userNumberInput(){
-  int userChoice;
-  bool inputCheck = false;
-  do{
-    cin.clear();
-    if (cin >> userChoice){
-      inputCheck = true;
-      break;
-    }
-    else{
-      cout <<"\nPlease enter a valid digit:\n";
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-  }while(!inputCheck);
-  return userChoice;
-}
-
 int collectX(Player currentPlayer){
   bool inputCheck = false;
   int userChoice;
   do{
     cout << "\nPlease enter your X coordinates (1,2,3...): ";
 
-    userChoice = userNumberInput();
+    userChoice = helper.userNumberInput();
 
     if(userChoice >= 1 && userChoice <= currentPlayer.getX()){
       inputCheck=true;
@@ -127,19 +112,7 @@ string collectOr(Player currentPlayer){
   return userChoice;
 }
 
-void GetSettingsFile(){
-  // create a file instance
-  mINI::INIFile file("adaship_config.ini");
-
-  // create a data structure
-  mINI::INIStructure ini;
-
-  // now we can read the file
-    file.read(ini);
-  //cout  ini;
-}
-
-int getShipLength(string shipName){
+mINI::INIStructure GetSettingsFile(){
   // create a file instance
   mINI::INIFile file("adaship_config.ini");
 
@@ -148,30 +121,58 @@ int getShipLength(string shipName){
 
   // now we can read the file
   file.read(ini);
-  
+  return ini;
+}
+
+int getShipLength(string shipName){
+  mINI::INIStructure ini = GetSettingsFile();
   return stoi(ini["Ships"][shipName]);
 }
 
-void placeShip(string shipName, Player currentPlayer){
+int getBoardFile(string coord){
+  mINI::INIStructure ini = GetSettingsFile();
+  return stoi(ini["Board"][coord]);
+}
+
+void placeShip(string shipName, Player &currentPlayer){
   int playerX = collectX(currentPlayer);
   string playerY = collectY(currentPlayer);
   string playerOr = collectOr(currentPlayer);
   int shipLength = getShipLength(shipName);
   currentPlayer.addToList(Ship(playerX, playerY, shipLength, playerOr, shipName));
-  //localShipList.push_back(Ship(playerX, playerY, shipLength, playerOr, shipName));
+
 }
 
+vector<string> readShipsAvalible(){
+  vector<string> ships;
+  for (auto const& it : GetSettingsFile())
+  {
+	  auto const& section = it.first;
+	  auto const& collection = it.second;
+    if (section == "ships"){
+      for (auto const& it2 : collection)
+	    {
+		    auto const& key = it2.first;
+		    ships.push_back(key); 
+	    }
+    }
+  }
+  return ships;
+}
+  
+  
 
-void placeShipsMenu(Player &currentPlayer){
-  string menuChoices[] = {"Place Carrier","Place Battleship", "Place Destroyer", "Place Submarine", "Place Patrol Boat", "Back"};
+
+void placeShipsMenu(Player currentPlayer){
+  vector<string> ships = readShipsAvalible();
+  ships.push_back("Back");
   int userChoice;
 
   do{
-    cout << "\n\nPlace Ships\n\n";
-    vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
-    printMenu(vecOfStr);
+    cout << "\n\nWhich Ships would you like to place?\n";
+    printMenu(ships);
 
-    userChoice = userNumberInput();
+    userChoice = helper.userNumberInput();
     
     switch(userChoice) {
 			case 1: 
@@ -184,14 +185,11 @@ void placeShipsMenu(Player &currentPlayer){
         placeShip("destroyer", currentPlayer);
         break;
       case 4: 
-        //placeShip("submarine", currentPlayer);
-        //currentPlayer.addNewShips(currentPlayer.getShipList());
+        placeShip("submarine", currentPlayer);
         break;
       case 5: 
-        currentPlayer.printAllShips();
-        
-        // currentPlayer.printAllShips(currentPlayer.getShipList());
         //placeShip("patrol_boat", currentPlayer);
+        currentPlayer.printAllShips();
         break;
 			case 0: 
         cout << "Exiting";
@@ -207,7 +205,7 @@ void placeShipsMenu(Player &currentPlayer){
 
 bool setupGame(){
   playerList.push_back(Player(1,1,5,0));
-  playerList[0].createBoard(10, 10);
+  playerList[0].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   
   bool continuePlay = false;
   int userChoice;
@@ -219,7 +217,7 @@ bool setupGame(){
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
     
-    userChoice = userNumberInput();
+    userChoice = helper.userNumberInput();
     
     switch(userChoice) {
 			case 1: 
@@ -262,7 +260,7 @@ void mainMenu(){
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     printMenu(vecOfStr);
 
-    userChoice = userNumberInput();
+    userChoice = helper.userNumberInput();
     
     switch(userChoice) {
 			case 1: 
@@ -282,6 +280,5 @@ void mainMenu(){
 }
 
 int main() {
-  GetSettingsFile();
   mainMenu();
 }
