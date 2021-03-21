@@ -50,16 +50,27 @@ class Board{
       }
     }
 
-    void printBoard(vector<vector<string>> activeShips){
+    void printPlayerBoard(vector<vector<string>> activeShips){
+      vector<string> allShipsY;
+      vector<string> allStringX;
+      cout << activeShips.size() << "THIS IS SIZE";
       for(int i = 1; i < y; i++){
         cout << "\t" <<nth_letter(i);
+      }
+      for(vector<string> ship : activeShips){
+        allShipsY.push_back(ship.at(0));
+        cout<<ship[0] << "THIS IS SHIP";
+      }
+      for(vector<string> ship : activeShips){
+        allStringX.push_back(ship.at(1));
+        cout<<ship[1];
       }
       for(int i = 1; i < y; i++){
         cout << "\n" << i << "\t";
         for(int j = 1; j < x; j++){
           // cout << "THIS IS ACTIVE SHIPS " << activeShips.at(i).at(j)<<"\n";
-          // cout << "THIS IS TO STRING " << j<<"\n";
-          if (count(activeShips.begin(), activeShips.end(), j)){
+          //cout << "THIS IS TO STRING " << j<<"\n";
+          if (find(allStringX.begin(), allStringX.end(), to_string(j)) != allShipsY.end()){
             cout << "0" << "\t";
           }
           else{

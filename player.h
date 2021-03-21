@@ -50,7 +50,7 @@ class Player{
   
 
   void printBoard(){
-    playerBoard.printBoard(allShips());
+    playerBoard.printPlayerBoard(allShips());
   }
 
   void printAllShips(){
