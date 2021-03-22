@@ -5,6 +5,7 @@ class Ship{
   private:
   int xCoord;
   string yCoord;
+  string shipId;
   int length;
   string orientation;
   string shipName;
@@ -63,6 +64,7 @@ class Ship{
     vector<string> tempCoords;
     tempCoords.push_back(yCoord);
     tempCoords.push_back(to_string(xCoord));
+    tempCoords.push_back(shipId);
     shipCoord.push_back(tempCoords);
     tempCoords.clear();
 
@@ -70,24 +72,27 @@ class Ship{
       if (orientation == "V"){
         tempCoords.push_back(yCoord);
         tempCoords.push_back(to_string(xCoord+i));
+        tempCoords.push_back(shipId);
         shipCoord.push_back(tempCoords);
         tempCoords.clear();
       }
       else{
         tempCoords.push_back(nth_letter((alphaToNum(yCoord)+i)));
         tempCoords.push_back(to_string(xCoord));
+        tempCoords.push_back(shipId);
         shipCoord.push_back(tempCoords);
         tempCoords.clear();
       }
     }
   }
 
-  Ship(int userX, string userY, int shipLength, string playerOr, string name){
+  Ship(int userX, string userY, int shipLength, string playerOr, string name, string userShipId){
     xCoord = userX;
     yCoord = userY;
     orientation = playerOr;
     length = shipLength;
     shipName = name;
+    shipId = userShipId;
     alive = true;
     placed = true;
     generateCoords();
@@ -96,6 +101,7 @@ class Ship{
   string getName(){return shipName;}
   bool getAlive(){return alive;}
   bool getPlaced(){return placed;}
+  string getShipId(){return shipId;}
 
   vector<vector<string>> getShipCoord(){return shipCoord;}
 

@@ -15,16 +15,35 @@ class Player{
   int shotsPerRound;
   int numOfShips;
   int bombs;
+
+  int returnVal(char x)
+    {
+      return (int)x - 64;
+    }
+
+  int alphaToNum(string toConvert){
+    int converted;
+    for (unsigned int i = 0; i < toConvert.length(); i++)
+    {
+      converted = returnVal(toConvert[i]);
+    }
+    return converted;
+  }
   
 
   public:
 
   Player(int playerIdInput, int playerTypeInput, int numberOfShips, int playerBombCount){
-    playerId = playerIdInput;
-    playerType = playerTypeInput;
-    numOfShips = numberOfShips;
-    bombs = playerBombCount;
-  }
+      playerId = playerIdInput;
+      playerType = playerTypeInput;
+      numOfShips = numberOfShips;
+      bombs = playerBombCount;
+    }
+
+  vector<Ship> getShipList(){return shipList;};
+  int getX(){return playerBoard.getX();};
+  int getY(){return playerBoard.getY();};
+  string getYAlpha(){return playerBoard.getYAlpha();};
 
   void setPlayerId(int id){playerId = id;}
   int getPlayerId(){return playerId;}
@@ -37,20 +56,15 @@ class Player{
 
   void setBombs(int userBombs){bombs = userBombs;}
   int getBombs(){return bombs;}
-
-  vector<vector<string>> allShips(){
+  
+  void printBoard(){
     vector<vector<string>> temp;
     for (Ship ship : shipList){
       for(vector<string> coord : ship.getShipCoord()){
-      temp.push_back(coord);
+        temp.push_back(coord);
       }
     }
-    return temp;
-  }
-  
-
-  void printBoard(){
-    playerBoard.printPlayerBoard(allShips());
+    playerBoard.printPlayerBoard(temp);
   }
 
   void printAllShips(){
@@ -63,14 +77,27 @@ class Player{
     playerBoard.setBoard(x,y);
   }
 
-  void deleteShip(string shipName){
+  void deleteShip(Ship removedShip){
     int i = 0;
     for(auto ships : shipList){
-      if(ships.getName() == shipName){
+      if(ships.getShipId() == removedShip.getShipId()){
         shipList.erase(shipList.begin()+i);
       }
       i++;
     }
+  }
+
+  bool compareShipLists(vector<vector<string>> ships){
+    for (vector<string> newCoords : ships){
+      for (Ship currentShip : shipList){
+        for(vector<string> ship : currentShip.getShipCoord()){
+          if(ship.at(0) == newCoords.at(0) && ship.at(1) > newCoords.at(1)){
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
   bool checkShipList(string shipName){
@@ -82,21 +109,30 @@ class Player{
     return true;//not found in our list
   }
 
+  bool checkShipInBoard(vector<vector<string>> ships){
+    for(vector<string> ship : ships){
+      if(alphaToNum(ship.at(0)) > getY() && ship.at(1) > to_string(getX())){
+        return false;
+      }
+    }
+    return true;
+  }
+
   void addToList(Ship newShip){
-    if(checkShipList(newShip.getName())){
+    if(checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()) ){
       shipList.push_back(newShip);
       newShip.getDetails();
     }
-    else{
+    else if(!checkShipList(newShip.getName())){
       cout << "\nUnable to place: " << newShip.getName() << " as it already exists.\n";
     }
+    else if(!compareShipLists(newShip.getShipCoord()){
+      cout << "\nUnable to place: " << newShip.getName() << " as it overlaps current ships.\n";
+    }
+    else{
+      cout << "\nUnable to place: " << newShip.getName() << " as it goes past the board boundary.\n";
+    }
   }
-
-  vector<Ship> getShipList(){return shipList;};
-
-  int getX(){return playerBoard.getX();};
-  int getY(){return playerBoard.getY();};
-  //int getYAlpha(){return playerBoard.getYAlpha();};
 
   void resetBoard(){
     playerBoard = resetCopy;

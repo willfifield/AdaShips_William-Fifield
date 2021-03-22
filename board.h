@@ -26,96 +26,51 @@ class Board{
       }
     }
 
+    int returnVal(char x)
+    {
+      return (int)x - 64;
+    }
+
+    int alphaToNum(string toConvert){
+      int converted;
+      for (unsigned int i = 0; i < toConvert.length(); i++)
+      {
+        converted = returnVal(toConvert[i]);
+      }
+      return converted;
+    }
+
 
   public:
 
     int getX(){return x;};
     int getY(){return y;};
-    //string getYAlpha(){return nth_letter(y);};
+    string getYAlpha(int number){return nth_letter(y);};
 
     void setBoard(int userX, int userY){
       y = userY;
       x = userX;
     }
 
-
-    void generateBoard(){
-      vector<string> lineCreate;
-      for (int i = 0; i < y; i++){
-        for(int j = 0; j < x; j++){
-          lineCreate.push_back("~");
+    string checkShip(int counti, int countj,vector<vector<string>> ships){
+      for(vector<string> ship : ships){
+        if(alphaToNum(ship.at(0)) == countj && ship.at(1) == to_string(counti)){
+          return ship.at(2);
         }
-        board.push_back(lineCreate);
-        lineCreate.clear();
       }
+      return "~";
     }
 
-    void printPlayerBoard(vector<vector<string>> activeShips){
-      vector<string> allShipsY;
-      vector<string> allStringX;
-      cout << activeShips.size() << "THIS IS SIZE";
-      for(int i = 1; i < y; i++){
+    void printPlayerBoard(vector<vector<string>> &activeShips){
+      for(int i = 1; i <= y; i++){
         cout << "\t" <<nth_letter(i);
       }
-      for(vector<string> ship : activeShips){
-        allShipsY.push_back(ship.at(0));
-        cout<<ship[0] << "THIS IS SHIP";
-      }
-      for(vector<string> ship : activeShips){
-        allStringX.push_back(ship.at(1));
-        cout<<ship[1];
-      }
-      for(int i = 1; i < y; i++){
+      for(int i = 1; i <= y; i++){
         cout << "\n" << i << "\t";
-        for(int j = 1; j < x; j++){
-          // cout << "THIS IS ACTIVE SHIPS " << activeShips.at(i).at(j)<<"\n";
-          //cout << "THIS IS TO STRING " << j<<"\n";
-          if (find(allStringX.begin(), allStringX.end(), to_string(j)) != allShipsY.end()){
-            cout << "0" << "\t";
-          }
-          else{
-            cout << "~" << "\t";
-          }
+        for(int j = 1; j <= x; j++){
+          cout << checkShip(i,j,activeShips) << "\t";
         }
       }
     }
 
-    // void printBoard(vector<vector<string>> activeShips){
-    //   int countX = 1;
-    //   int countY = 1;
-    //   for(vector<string> lineY: board){
-    //     cout << "\t" <<nth_letter(countX);
-    //     countX++;
-    //   }
-    //   for(vector<string> lineY : board){
-    //     cout << "\n" << countY << "\t";
-    //     for(string lineX: lineY){
-    //       cout << "THIS IS ACTIVE SHIPS " << activeShips[countX][countY]<<"\n";
-    //       cout << "THIS IS TO STRING " << countX<<"\n";
-    //       if (activeShips[countX][countY] == to_string(countX)){
-    //         cout << "0" << "\t";
-    //       }
-    //       else{
-    //         cout << lineX << "\t";
-    //       }
-    //     }
-    //     countY++;
-    //   }
-    // }
-
-    // void printBoard(){
-    //   int countX = 1;
-    //   int countY = 1;
-    //   for(vector<string> lineY: board){
-    //     cout << "\t" <<nth_letter(countX);
-    //     countX++;
-    //   }
-    //   for(vector<string> lineY : board){
-    //     cout << "\n" << countY << "\t";
-    //     for(string lineX: lineY){
-    //       cout << lineX << "\t";
-    //     }
-    //     countY++;
-    //   }
-    // }
 };
