@@ -43,7 +43,7 @@ class Player{
   vector<Ship> getShipList(){return shipList;};
   int getX(){return playerBoard.getX();};
   int getY(){return playerBoard.getY();};
-  string getYAlpha(){return playerBoard.getYAlpha();};
+  string getYAlpha(int number){return playerBoard.getYAlpha(number);};
 
   void setPlayerId(int id){playerId = id;}
   int getPlayerId(){return playerId;}
@@ -122,11 +122,9 @@ class Player{
     if(checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()) ){
       shipList.push_back(newShip);
       newShip.getDetails();
-    }
-    else if(!checkShipList(newShip.getName())){
+    }else if(!checkShipList(newShip.getName())){
       cout << "\nUnable to place: " << newShip.getName() << " as it already exists.\n";
-    }
-    else if(!compareShipLists(newShip.getShipCoord()){
+    }else if(!compareShipLists(newShip.getShipCoord())){
       cout << "\nUnable to place: " << newShip.getName() << " as it overlaps current ships.\n";
     }
     else{
@@ -134,7 +132,18 @@ class Player{
     }
   }
 
+  bool autoAdd(Ship newShip){
+    if(checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()) ){
+      shipList.push_back(newShip);
+      newShip.getDetails();// -----------------------REMOVE WHEN READY TO PLAY-------------------------
+      return true;
+    }else {
+      return false;
+    }
+  }
+
   void resetBoard(){
     playerBoard = resetCopy;
   }
+
 };

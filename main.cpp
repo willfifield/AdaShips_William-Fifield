@@ -16,7 +16,8 @@ Helper helper;
 
 vector<Player> playerList;
 vector<string> shipsAvalible;
-int uniqueId;
+int uniquePlayer1Id;
+int uniquePlayer2Id;
 
 void clearScreen(){
     cout << string( 100, '\n' );
@@ -104,7 +105,6 @@ string collectOr(Player currentPlayer){
     userChoice = uppercaseConvert(userChoice);
 
     if(isLetters(userChoice) && (userChoice == "H" || userChoice == "V")){
-      
       inputCheck=true;
     }
     else{
@@ -115,14 +115,9 @@ string collectOr(Player currentPlayer){
 }
 
 mINI::INIStructure GetSettingsFile(){
-  // create a file instance
-  mINI::INIFile file("adaship_config.ini");
-
-  // create a data structure
-  mINI::INIStructure ini;
-
-  // now we can read the file
-  file.read(ini);
+  mINI::INIFile file("adaship_config.ini"); // create a file instance
+  mINI::INIStructure ini;// create a data structure
+  file.read(ini);// now we can read the file
   return ini;
 }
 
@@ -141,15 +136,9 @@ void placeShip(string shipName, Player &currentPlayer){
   string playerY = collectY(currentPlayer);
   string playerOr = collectOr(currentPlayer);
   int shipLength = getShipLength(shipName);
-  string shipId = to_string(uniqueId++);
+  string shipId = to_string(uniquePlayer1Id++);
   currentPlayer.addToList(Ship(playerX, playerY, shipLength, playerOr, shipName,shipId));
 }
-
-// void placeShipTest(string shipName, Player &currentPlayer){
-//   currentPlayer.addToList(Ship(3, "H", 5, "H", "carrier","0"));
-//   //currentPlayer.addToList(Ship(2, "G", 4, "H", "battleship","1"));
-//   //currentPlayer.addToList(Ship(6, "C", 4, "V", "destroyer","2"));
-// }
 
 vector<string> readShipsAvalible(){
   vector<string> ships;
@@ -181,7 +170,6 @@ void placeShipsMenu(Player &currentPlayer){
     
     switch(userChoice) {
 			case 1: 
-        //placeShipTest("carrier", currentPlayer); 
         placeShip("carrier", currentPlayer);
         break;
       case 2: 
@@ -207,35 +195,67 @@ void placeShipsMenu(Player &currentPlayer){
 }
 
 int generatePickedNumber(int maxNumber) {
-    // generating random number based on random device
-    random_device rdev;
-    mt19937 rgen(rdev());
-    // Distribute by defining a minimum number and max number.
-    std::uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
-    return idist(rgen);
+  // generating random number based on random device
+  random_device rdev;
+  mt19937 rgen(rdev());
+  // Distribute by defining a minimum number and max number.
+  uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
+  return idist(rgen);
 }
 
-string randomY(int maxNumber, Player computerPlayer){
+int shipCoordGen(int max, int shipLength){
+  int random;
+  do{
+    random = generatePickedNumber(max);
+  }while(random >= (max-shipLength));
+  return random;
+}
+
+string randomOrientation(){
+  int random = generatePickedNumber(2);
+  if(random == 1){return "H";}
+  else {return "V";}
+}
+
+string randomY(int maxNumber, Player &computerPlayer, int length){
+  int random = shipCoordGen(maxNumber,length);
+  return helper.nth_letter(random);
+}
+
+
+void generateAiShips(Player &computerPlayer, string shipName){
+  string shipId;
+  if(computerPlayer.getPlayerId() != 5){
+    shipId = to_string(uniquePlayer1Id++);
+  }else{
+    shipId = to_string(uniquePlayer2Id++);
+  }
   
+  bool testOrientation = false;
+  do{
+    testOrientation = computerPlayer.autoAdd(Ship(shipCoordGen(computerPlayer.getX(),getShipLength(shipName)), randomY(computerPlayer.getY(), computerPlayer,getShipLength(shipName)), getShipLength(shipName), randomOrientation(), shipName,shipId));
+  }while(!testOrientation);
 }
 
 void computerGenerate(Player &computerPlayer){
-  while(computerPlayer.getShipList().size()<5){
-    computerPlayer.addToList(Ship(generatePickedNumber(computerPlayer.getX()), "H", 5, "H", "carrier","0"));
+  vector<string> computerList = readShipsAvalible();
+  for (string shipName : computerList){
+    generateAiShips(computerPlayer, shipName);
   }
-  
 }
 
 
 bool setupGame(){
   playerList.push_back(Player(1,1,5,0));
-  playerList.push_back(Player(2,0,5,0));
+  playerList.push_back(Player(5,0,5,0));
   playerList[0].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   playerList[1].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
 
   computerGenerate(playerList[1]);
+  playerList[1].printBoard();// -----------------------REMOVE WHEN READY TO PLAY-------------------------
   
   bool continuePlay = false;
+  bool autoplaced = false;
   int userChoice;
   string menuChoices[] = {"Place ship myself","Auto-place", "Continue", "Reset", "Quit"};
   do{
@@ -252,8 +272,13 @@ bool setupGame(){
         placeShipsMenu(playerList[0]);
         break;
       case 2: 
-        cout << "\nAuto-place\n";
-        //setupGame();
+        if(!autoplaced){
+          cout << "\nAuto-place\n";
+          computerGenerate(playerList[0]);
+          autoplaced = true;
+        }else{
+          cout << "\n You have already placed all ships.\n";
+        }
         break;
       case 3: 
         cout << "\nContinue\n";
