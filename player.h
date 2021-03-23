@@ -11,25 +11,11 @@ class Player{
   Board playerBoard;
   Board resetCopy;
   vector<Ship> shipList;
+  Helper helper;
 
   int shotsPerRound;
   int numOfShips;
-  int bombs;
-
-  int returnVal(char x)
-    {
-      return (int)x - 64;
-    }
-
-  int alphaToNum(string toConvert){
-    int converted;
-    for (unsigned int i = 0; i < toConvert.length(); i++)
-    {
-      converted = returnVal(toConvert[i]);
-    }
-    return converted;
-  }
-  
+  int bombs; 
 
   public:
 
@@ -111,7 +97,7 @@ class Player{
 
   bool checkShipInBoard(vector<vector<string>> ships){
     for(vector<string> ship : ships){
-      if(alphaToNum(ship.at(0)) > getY() && ship.at(1) > to_string(getX())){
+      if(helper.alphaToNum(ship.at(0)) > getY() && ship.at(1) > to_string(getX())){
         return false;
       }
     }

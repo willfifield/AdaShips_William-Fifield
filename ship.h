@@ -13,40 +13,7 @@ class Ship{
   bool placed;
   vector<vector<string>> shipCoord;
 
-
-  int returnVal(char x)
-  {
-    return (int)x - 64;
-  }
-
-  int alphaToNum(string toConvert){
-    int converted;
-    for (unsigned int i = 0; i < toConvert.length(); i++)
-    {
-      converted = returnVal(toConvert[i]);
-    }
-    return converted;
-  }
-
-  string nth_letter(int n){
-    assert(n >= 1 && n <= 104);
-    if (n>=27 && n<=52){ 
-      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-26)-1]);
-      return ("A"+ s);
-    }
-    else if (n>=52 && n<=78){ 
-      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-52)-1]);
-      return ("B"+ s);
-    }
-    else if (n>=78 && n<=104){ 
-      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-78)-1]);
-      return ("C"+ s);
-    }
-    else{
-      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[n-1]);
-      return s;
-    }
-  }
+  Helper helper;
 
   public:
 
@@ -77,7 +44,7 @@ class Ship{
         tempCoords.clear();
       }
       else{
-        tempCoords.push_back(nth_letter((alphaToNum(yCoord)+i)));
+        tempCoords.push_back(helper.nth_letter((helper.alphaToNum(yCoord)+i)));
         tempCoords.push_back(to_string(xCoord));
         tempCoords.push_back(shipId);
         shipCoord.push_back(tempCoords);

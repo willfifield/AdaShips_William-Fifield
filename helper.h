@@ -1,8 +1,27 @@
+/*
+This is a public helper class.
+
+Inside of this class you will see generic code being passed through. The use of this class is to enable code to be reused in a good fashion, and not to have any duplicate code.
+*/
 using namespace std;
 
 class Helper{
+  private:
+  int returnVal(char x)
+    {
+      return (int)x - 64;
+    }
+
   public:
-  
+
+  int alphaToNum(string toConvert){
+    int converted;
+    for (unsigned int i = 0; i < toConvert.length(); i++)
+    {
+      converted = returnVal(toConvert[i]);
+    }
+    return converted;
+  }
 
   int userNumberInput(){
     int userChoice;
@@ -42,7 +61,32 @@ class Helper{
       }
     }
 
+  int generatePickedNumber(int maxNumber) {
+  // generating random number based on random device
+  random_device rdev;
+  mt19937 rgen(rdev());
+  // Distribute by defining a minimum number and max number.
+  uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
+  return idist(rgen);
+  }
 
-  
+  int shipCoordGen(int max, int shipLength){
+    int random;
+    do{
+      random = generatePickedNumber(max);
+    }while(random >= (max-shipLength));
+    return random;
+  }
+
+  string randomOrientation(){
+    int random = generatePickedNumber(2);
+    if(random == 1){return "H";}
+    else {return "V";}
+  }
+
+  string randomY(int maxNumber, int length){
+    int random = shipCoordGen(maxNumber,length);
+    return nth_letter(random);
+  }
 
 };

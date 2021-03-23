@@ -194,34 +194,6 @@ void placeShipsMenu(Player &currentPlayer){
   }while (userChoice != 0);
 }
 
-int generatePickedNumber(int maxNumber) {
-  // generating random number based on random device
-  random_device rdev;
-  mt19937 rgen(rdev());
-  // Distribute by defining a minimum number and max number.
-  uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
-  return idist(rgen);
-}
-
-int shipCoordGen(int max, int shipLength){
-  int random;
-  do{
-    random = generatePickedNumber(max);
-  }while(random >= (max-shipLength));
-  return random;
-}
-
-string randomOrientation(){
-  int random = generatePickedNumber(2);
-  if(random == 1){return "H";}
-  else {return "V";}
-}
-
-string randomY(int maxNumber, Player &computerPlayer, int length){
-  int random = shipCoordGen(maxNumber,length);
-  return helper.nth_letter(random);
-}
-
 
 void generateAiShips(Player &computerPlayer, string shipName){
   string shipId;
@@ -233,7 +205,7 @@ void generateAiShips(Player &computerPlayer, string shipName){
   
   bool testOrientation = false;
   do{
-    testOrientation = computerPlayer.autoAdd(Ship(shipCoordGen(computerPlayer.getX(),getShipLength(shipName)), randomY(computerPlayer.getY(), computerPlayer,getShipLength(shipName)), getShipLength(shipName), randomOrientation(), shipName,shipId));
+    testOrientation = computerPlayer.autoAdd(Ship(helper.shipCoordGen(computerPlayer.getX(),getShipLength(shipName)), helper.randomY(computerPlayer.getY(), getShipLength(shipName)), getShipLength(shipName), helper.randomOrientation(), shipName,shipId));
   }while(!testOrientation);
 }
 
@@ -250,12 +222,13 @@ bool setupGame(){
   playerList.push_back(Player(5,0,5,0));
   playerList[0].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   playerList[1].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
+  shipsAvalible = readShipsAvalible();
 
   computerGenerate(playerList[1]);
   playerList[1].printBoard();// -----------------------REMOVE WHEN READY TO PLAY-------------------------
   
   bool continuePlay = false;
-  bool autoplaced = false;
+  bool placed = false;
   int userChoice;
   string menuChoices[] = {"Place ship myself","Auto-place", "Continue", "Reset", "Quit"};
   do{
@@ -269,13 +242,18 @@ bool setupGame(){
     
     switch(userChoice) {
 			case 1: 
-        placeShipsMenu(playerList[0]);
+        if(!placed || playerList[0].getShipList().size() < shipsAvalible.size()){
+          placeShipsMenu(playerList[0]);
+          placed = true;
+        }else{
+          cout << "\n You have already placed all ships.\n";
+        }
         break;
       case 2: 
-        if(!autoplaced){
+        if(!placed){
           cout << "\nAuto-place\n";
           computerGenerate(playerList[0]);
-          autoplaced = true;
+          placed = true;
         }else{
           cout << "\n You have already placed all ships.\n";
         }
