@@ -29,7 +29,7 @@ class Board{
       return "~";
     }
 
-    void printPlayerBoard(vector<vector<string>> &activeShips){
+    void printPlayerBoard(vector<vector<string>> &activeShips, bool view){
       for(int i = 1; i <= y; i++){
         cout << "\t" <<helper.nth_letter(i);
       }
@@ -43,7 +43,12 @@ class Board{
             cout <<"\033[1;33m"<< checkShip(i,j,activeShips) <<"\033[0m"  << "\t";
           }
           else{
-            cout << checkShip(i,j,activeShips) << "\t";
+            if(view){
+              cout << checkShip(i,j,activeShips) << "\t";
+            }
+            else{
+              cout << "~"  << "\t";
+            }
           }
         }
       }

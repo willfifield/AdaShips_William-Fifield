@@ -47,15 +47,15 @@ class Player{
 
   void setBombs(int userBombs){bombs = userBombs;}
   int getBombs(){return bombs;}
-  
-  void printBoard(){
+
+  void printBoard(bool view){
     vector<vector<string>> temp;
     for (Ship ship : shipList){
       for(vector<string> coord : ship.getShipCoord()){
         temp.push_back(coord);
       }
     }
-    playerBoard.printPlayerBoard(temp);
+    playerBoard.printPlayerBoard(temp, view);
   }
 
   void missileShot(vector<string> missileCoords){
@@ -64,31 +64,26 @@ class Player{
       for(vector<string> &ship : firedAtShip.getShipCoord()){
         if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
           firedAtShip.missileHit(missileCoords, true);
-          cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
           found = true;
         }
       }
     }
-    if(!found){//int userX, string userY, int shipLength, string playerOr, string name, string userShipId
-      cout <<"\n"<< missileCoords.at(0) << ": ThIS IS MISSILE 0\n";
-      //int convert = stoi(missileCoords.at(0));
+    if(!found){
       addToList(createShip(stoi(missileCoords.at(1)),missileCoords.at(0), 0, "H", "missed","Ø"));
-      //cout << "\nBEYOND IF NOT FOUND\n";
     }
   }
 
   bool checkIfWon(){
     int winCheck = 0;
     for(Ship shipCheck : shipList){
+      shipCheck.checkDestroyed();
       if (shipCheck.getAlive()){
         winCheck++;
       }
     }
     if(winCheck == 0){
-      cout << "\n---------------WINNER--------------\n";
       return true;
     }
-    cout << "\n  WINNER CHECK  \n";
     return false;
   }
 
@@ -146,7 +141,6 @@ class Player{
   void addToList(Ship newShip){
     if( newShip.getName() == "missed" || (checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()))){ //Not checking "missed" items
       shipList.push_back(newShip);
-      newShip.getDetails();
     }else if(!checkShipList(newShip.getName())){
       cout << "\nUnable to place: " << newShip.getName() << " as it already exists.\n";
     }else if(!compareShipLists(newShip.getShipCoord())){
@@ -160,7 +154,6 @@ class Player{
   bool autoAdd(Ship newShip){
     if(checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()) ){
       shipList.push_back(newShip);
-      newShip.getDetails();// -----------------------REMOVE WHEN READY TO PLAY-------------------------
       return true;
     }else {
       return false;
@@ -168,7 +161,7 @@ class Player{
   }
 
   void resetBoard(){
-    playerBoard = resetCopy;
+    shipList.clear();
   }
 
 };

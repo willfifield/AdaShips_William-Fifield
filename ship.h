@@ -61,7 +61,7 @@ class Ship{
     bool check = find(checkDes.begin(), checkDes.end(), shipId) != checkDes.end();
     if(!check){
       alive = false;
-      }
+    }
   }
 
   void missileHit(vector<string> missileCoords, bool hitOrMiss){
@@ -84,7 +84,13 @@ class Ship{
     length = shipLength;
     shipName = name;
     shipId = userShipId;
-    alive = true;
+    if (name == "missed"){
+      alive = false;
+    }
+    else{
+      alive = true;
+    }
+    
     placed = true;
     generateCoords();
   }
@@ -93,8 +99,6 @@ class Ship{
   bool getAlive(){return alive;}
   bool getPlaced(){return placed;}
   string getShipId(){return shipId;}
-
   vector<vector<string>> getShipCoord(){return shipCoord;}
-
 
 };

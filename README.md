@@ -51,13 +51,13 @@ This approach allows me to further think, such as input validation, as these ele
   - [x] Validate again to ensure shots are not wasted on the same already shot at location
 - [x] Notify where the user has been shot, through their board
 - [x] Have options to "quit game" and "end turn".
-- [ ] After every turn check if all ships have been destroyed 
-  - [ ] If yes, end the game with the winner being shown on the screen
-  - [ ] If no, repeat the turn based game until this criteria is filled.
+- [x] After every turn check if all ships have been destroyed 
+  - [x] If yes, end the game with the winner being shown on the screen
+  - [x] If no, repeat the turn based game until this criteria is filled
 - [x] Go back to main-menu when game is complete.
 
 # Housekeeping
-- [ ] Refactor code, ensuring there is no duplicate. 
-  - [ ] If there is duplicate, see where it is best to be stored, and use OOP functionality.
-- [ ] Remove any "code smells", ensuring code is easy and efficient
+- [x] Refactor code, ensuring there is no duplicate. 
+  - [x] If there is duplicate, see where it is best to be stored, and use OOP functionality.
+- [x] Remove any "code smells", ensuring code is easy and efficient
 - [ ] Ensure the code is well commented, explaining what classes/functions/code does within the software. Make it readable, as if a document were to be made from it and you can understand the whole project through this C++ comment doc.

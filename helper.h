@@ -31,6 +31,13 @@ class Helper{
 
   public:
 
+  int opposite(int toSwap){
+    if(toSwap==0){
+      return 1;
+    }
+    return 0;
+  }
+
   int collectX(int xMax){
     bool inputCheck = false;
     int userChoice;
@@ -58,8 +65,6 @@ class Helper{
       cin.ignore();
       getline(cin,userChoice);
       userChoice = uppercaseConvert(userChoice);
-      cout <<"\nUNCONVERTED: " << userChoice <<"\n";
-      cout << "\nCONVERTED: " << uppercaseConvert(userChoice) << "\n";
 
       if(isLetters(uppercaseConvert(userChoice)) && alphaToNum(userChoice) >= 0 && alphaToNum(userChoice) <= yMax){
         inputCheck=true;

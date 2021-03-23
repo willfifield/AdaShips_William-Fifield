@@ -8,7 +8,6 @@ class Game{
   vector<vector<string>> shotAreasP1;
   vector<vector<string>> shotAreasP2;
 
-
   public:
   
   Game (vector<Player> &newPlayerList){
@@ -81,49 +80,27 @@ class Game{
     compareShipLists(newMissile, playerNumber);
   }
 
-  int opposite(int toSwap){
-    if(toSwap==0){
-      return 1;
-    }
-    return 0;
-  }
-
   void compareShipLists(vector<string> missileCoords, int playerNumber){
-    playerList[opposite(playerNumber)].missileShot(missileCoords);
+    playerList[helper.opposite(playerNumber)].missileShot(missileCoords);
   }
-
-  // bool checkIfWon(int playerNumber){
-  //   for(Ship shipCheck : playerList[playerNumber].getShipList()){
-  //     for (vector<string> shipIdCheck : shipCheck.getShipCoord()){
-  //       if (shipIdCheck.at(2) != "#" || shipIdCheck.at(2) != "Ø"){
-  //         cout <<"\nCHECKED IF WON\n";
-  //         return false;
-  //       }
-  //     }
-  //   }
-  //   cout <<"\n\n--------------------GAME WON-----------------------\n\n";
-  //   return true;
-  // }
-
 
   void playerTurn(){
     int userChoice;
     int playerNumber = 0;
     bool gameActive = true;
-    bool hasWon = false;
     string menuChoices[] = {"Shoot Missile","Auto-Shot","Quit"};
     do{
       cout <<"\nPlayer " << playerNumber+1 <<"'s turn\n";
       cout<<"\nThis is your board:\n";
-      playerList[playerNumber].printBoard();
+      playerList[playerNumber].printBoard(true);
       printLine();
       cout<<"\n\nThis is the other players board:\n";
-      playerList[opposite(playerNumber)].printBoard();
+      playerList[helper.opposite(playerNumber)].printBoard(false);
 
       if(playerList[playerNumber].getPlayerId() >= 5){
         getShot(playerNumber, true);
         cout << "\n\nPlease enter 1 to continue from computers turn\n";
-        //userChoice = helper.userNumberInput();
+        userChoice = helper.userNumberInput();
       }else{
         cout << "\n\nWhere would you like to shoot?\n";
         vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
@@ -153,10 +130,14 @@ class Game{
           }
         }while (loopCheck);
       }
-      playerNumber = opposite(playerNumber);
-      hasWon = playerList[playerNumber].checkIfWon();
+      playerNumber = helper.opposite(playerNumber);
+      if(playerList[playerNumber].checkIfWon()){
+        gameActive = false;
+      }
       //helper.clearScreen(); ---------------------------------------------ADD BACK-----------------------
-    }while (gameActive || !hasWon);
+    }while (gameActive);
+
+    cout << "\n\nCongratulations Player " << helper.opposite(playerNumber)+1 <<", you WON!\n\n";
   }
 
 };

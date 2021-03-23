@@ -103,7 +103,7 @@ void placeShipsMenu(Player &currentPlayer){
 
 void generateAiShips(Player &computerPlayer, string shipName){
   string shipId;
-  if(computerPlayer.getPlayerId() >= 5){
+  if(computerPlayer.getPlayerId() <= 5){
     shipId = to_string(uniquePlayer1Id++);
   }else{
     shipId = to_string(uniquePlayer2Id++);
@@ -130,18 +130,24 @@ bool setupGame(int player1, int player2){
   playerList[0].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   playerList[1].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   shipsAvalible = readShipsAvalible();
+  bool computerPlay = false;
 
-  computerGenerate(playerList[1]);
-  playerList[1].printBoard();// -----------------------REMOVE WHEN READY TO PLAY-------------------------
+  if(playerList[1].getPlayerId() >= 5){
+    computerGenerate(playerList[1]);
+    computerPlay = true;
+  }
   
   bool continuePlay = false;
+  bool playerTwoReady = false;
+  
   bool placed = false;
   int userChoice;
+  int playerNumber = 0;
   string menuChoices[] = {"Place ship myself","Auto-place", "Continue", "Reset", "Quit"};
   do{
-    
-    cout << "\n\nGame Set-up\n\n";
-    playerList[0].printBoard();
+    cout << "\n\nGame Set-up\n";
+    cout << "Player "<< playerNumber+1 <<"\n\n";
+    playerList[playerNumber].printBoard(true);
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     helper.printMenu(vecOfStr);
     
@@ -149,8 +155,8 @@ bool setupGame(int player1, int player2){
     
     switch(userChoice) {
 			case 1: 
-        if(!placed || playerList[0].getShipList().size() < shipsAvalible.size()){
-          placeShipsMenu(playerList[0]);
+        if(!placed || playerList[playerNumber].getShipList().size() < shipsAvalible.size()){
+          placeShipsMenu(playerList[playerNumber]);
           placed = true;
         }else{
           cout << "\n You have already placed all ships.\n";
@@ -159,7 +165,8 @@ bool setupGame(int player1, int player2){
       case 2: 
         if(!placed){
           cout << "\nAuto-place\n";
-          computerGenerate(playerList[0]);
+          uniquePlayer1Id = 0;
+          computerGenerate(playerList[playerNumber]);
           placed = true;
         }else{
           cout << "\n You have already placed all ships.\n";
@@ -167,12 +174,21 @@ bool setupGame(int player1, int player2){
         break;
       case 3: 
         cout << "\nContinue\n";
-        continuePlay = true;
-        userChoice = 0;
+        if (computerPlay || playerTwoReady){
+          continuePlay = true;
+          userChoice = 0;
+        }
+        else{
+          helper.clearScreen();
+          playerNumber = helper.opposite(playerNumber);
+          placed = false;
+          playerTwoReady = true;
+        }
         break;
       case 4: 
         cout << "\nReset\n";
-        playerList[0].resetBoard();
+        playerList[playerNumber].resetBoard();
+        placed = false;
         break;
 			case 0: 
         cout << "Exiting";
@@ -191,7 +207,7 @@ void playGame(){
 
 void mainMenu(){
   int userChoice;
-  string menuChoices[] = {"One player vs Computer","Quit"};
+  string menuChoices[] = {"One player vs Computer","Two Player Game","Quit"};
   do{
     cout << "\n\nWelcome to the AdaShips\n";
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
@@ -203,6 +219,12 @@ void mainMenu(){
 			case 1: 
         helper.clearScreen();
         if(setupGame(1,5)){
+          playGame();
+        }
+        break;
+      case 2: 
+        helper.clearScreen();
+        if(setupGame(1,2)){
           playGame();
         }
         break;
