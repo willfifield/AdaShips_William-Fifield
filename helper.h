@@ -74,7 +74,7 @@ class Helper{
     int random;
     do{
       random = generatePickedNumber(max);
-    }while(random >= (max-shipLength));
+    }while(random > (max-shipLength));
     return random;
   }
 

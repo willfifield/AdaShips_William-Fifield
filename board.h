@@ -4,7 +4,7 @@ using namespace std;
 
 class Board{
   private:
-    vector<vector<string>> board;
+  
     int y;
     int x;
     Helper helper;

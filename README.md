@@ -10,9 +10,12 @@ Inside of this program you will see an object-oriented approach to the problem. 
 
 # Challenge Outline
 - [x] Written summary and review of the problem
-- [ ] UML style diagram for initial solution
+- [x] UML style diagram for initial solution
 - [x] Written work plan, with approach & development strategy
 - [x] Breakdown above plan into storys/epics for object-oriented designs
 
+# UML
+Please follow the link below to see the mock design UML for the project. This gives a bried understanding of what needs to be created within the object-oriented project.
 
+https://docs.google.com/drawings/d/1H_1S100Jxa762ZXFiUBqWA2gCyhnFs1ICksuH77g2ao/edit?usp=sharing
 

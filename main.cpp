@@ -197,7 +197,7 @@ void placeShipsMenu(Player &currentPlayer){
 
 void generateAiShips(Player &computerPlayer, string shipName){
   string shipId;
-  if(computerPlayer.getPlayerId() != 5){
+  if(computerPlayer.getPlayerId() >= 5){
     shipId = to_string(uniquePlayer1Id++);
   }else{
     shipId = to_string(uniquePlayer2Id++);
