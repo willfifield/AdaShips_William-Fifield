@@ -53,6 +53,24 @@ class Ship{
     }
   }
 
+  void missileHit(vector<string> missileCoords, bool hitOrMiss){
+    int count = 0;
+    for(vector<string> shotShip : shipCoord){
+      if(shotShip.at(0) == missileCoords.at(0) && shotShip.at(1) == missileCoords.at(1)){
+        if(hitOrMiss){
+          cout << "\nSHIP FOUND AT AGAIN: " << shotShip.at(0) << shotShip.at(1) << "\n";
+          getDetails();
+          shipCoord.at(count).at(2) = "#";
+        }
+        else{
+          shipCoord.at(count).at(2) = "Ø";
+        }
+      }
+      count++;
+    }
+  }
+  
+
   Ship(int userX, string userY, int shipLength, string playerOr, string name, string userShipId){
     xCoord = userX;
     yCoord = userY;

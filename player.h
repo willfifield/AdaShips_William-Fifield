@@ -27,6 +27,7 @@ class Player{
     }
 
   vector<Ship> getShipList(){return shipList;};
+
   int getX(){return playerBoard.getX();};
   int getY(){return playerBoard.getY();};
   string getYAlpha(int number){return playerBoard.getYAlpha(number);};
@@ -51,6 +52,31 @@ class Player{
       }
     }
     playerBoard.printPlayerBoard(temp);
+  }
+
+  void missileShot(vector<string> missileCoords){
+    int count = 0;
+    bool found = false;
+    for (Ship &firedAtShip : shipList){
+      for(vector<string> &ship : firedAtShip.getShipCoord()){
+        if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
+          firedAtShip.missileHit(missileCoords, true);
+          //ship.at(2) = "#";
+          cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
+          found = true;
+        }
+      }
+      count++;
+    }
+    if (!found){
+      for(vector<string> &ship : shipList[count].getShipCoord()){
+        if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
+          shipList[count].missileHit(missileCoords, false);
+          //ship.at(2) = "Ø";
+          cout << "\nSHIP MISSED AT: " << ship.at(0) << ship.at(1) << "\n";
+        }
+      }
+    }
   }
 
   void printAllShips(){

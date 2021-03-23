@@ -51,29 +51,30 @@ class Game{
   }
 
   void compareShipLists(vector<string> missileCoords, int playerNumber){
-    int count = 0;
-    bool found = false;
-    for (Ship firedAtShip : playerList[opposite(playerNumber)].getShipList()){
-      for(vector<string> ship : firedAtShip.getShipCoord()){
-        if(ship.at(0) == missileCoords.at(0) && ship.at(1) > missileCoords.at(1)){
-          ship[2] = "#";
-          cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
-          found = true;
-        }
-        else{
-          ship[2] = "Ø";
-        }
-      }
-      count++;
-    }
-    if (!found){
-      for(vector<string> &ship : playerList[opposite(playerNumber)].getShipList()[count].getShipCoord()){
-        if(ship.at(0) == missileCoords.at(0) && ship.at(0) > missileCoords.at(1)){
-          ship[2] = "Ø";
-          cout << "\nSHIP MISSED AT: " << ship.at(0) << ship.at(1) << "\n";
-        }
-      }
-    }
+    playerList[opposite(playerNumber)].missileShot(missileCoords);
+    // int count = 0;
+    // bool found = false;
+    // cout << "\nTEST LOCATION 1\n";
+    // for (Ship firedAtShip : playerList[opposite(playerNumber)].getShipList()){
+    //   cout << "\nTEST LOCATION 2\n";
+    //   for(vector<string> ship : firedAtShip.getShipCoord()){
+    //     cout << "\nTEST LOCATION 3\n";
+    //     if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
+    //       ship[2] = "#";
+    //       cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
+    //       found = true;
+    //     }
+    //   }
+    //   count++;
+    // }
+    // if (!found){
+    //   for(vector<string> &ship : playerList[opposite(playerNumber)].getShipList()[count].getShipCoord()){
+    //     if(ship.at(0) == missileCoords.at(0) && ship.at(0) > missileCoords.at(1)){
+    //       ship[2] = "Ø";
+    //       cout << "\nSHIP MISSED AT: " << ship.at(0) << ship.at(1) << "\n";
+    //     }
+    //   }
+    // }
   }
 
 

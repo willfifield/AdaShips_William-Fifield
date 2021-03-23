@@ -45,6 +45,7 @@ This approach allows me to further think, such as input validation, as these ele
 - [x] Print both the board to attack, and my own board
 - [x] Collect another coordinate from the users
   - [x] Validate this coordinate to see if it's already hit. Loop if failing
+- [x] Have the fired shot effect the ship location
 - [ ] Notify if this is a hit or a miss, printing this within the of the other players board (where you're shooting)
 - [ ] Have an auto-fire option using the auto-select function
   - [ ] Validate again to ensure shots are not wasted on the same already shot at location

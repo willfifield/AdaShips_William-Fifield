@@ -36,7 +36,15 @@ class Board{
       for(int i = 1; i <= y; i++){
         cout << "\n" << i << "\t";
         for(int j = 1; j <= x; j++){
-          cout << checkShip(i,j,activeShips) << "\t";
+          if(checkShip(i,j,activeShips) == "#"){
+            cout <<"\033[1;31m"<< checkShip(i,j,activeShips) <<"\033[0m"  << "\t";
+          }
+          else if(checkShip(i,j,activeShips) == "Ø"){
+            cout <<"\033[1;33m"<< checkShip(i,j,activeShips) <<"\033[0m"  << "\t";
+          }
+          else{
+            cout << checkShip(i,j,activeShips) << "\t";
+          }
         }
       }
     }
