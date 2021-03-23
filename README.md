@@ -41,10 +41,10 @@ This approach allows me to further think, such as input validation, as these ele
 - [x] Create a random x and y chooser for the computer player / auto place function
   - [x] Use the same validation for when placing ships, not allowing overlaps/off board etc
 - [x] Impliment the auto-place function for the AI player
-- [ ] Create new menu system now with turn based prompts
-- [ ] Print both the board to attack, and my own board
-- [ ] Collect another coordinate from the users
-  - [ ] Validate this coordinate to see if it's already hit. Loop if failing
+- [x] Create new menu system now with turn based prompts
+- [x] Print both the board to attack, and my own board
+- [x] Collect another coordinate from the users
+  - [x] Validate this coordinate to see if it's already hit. Loop if failing
 - [ ] Notify if this is a hit or a miss, printing this within the of the other players board (where you're shooting)
 - [ ] Have an auto-fire option using the auto-select function
   - [ ] Validate again to ensure shots are not wasted on the same already shot at location
