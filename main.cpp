@@ -111,7 +111,8 @@ void generateAiShips(Player &computerPlayer, string shipName){
   
   bool testOrientation = false;
   do{
-    testOrientation = computerPlayer.autoAdd(Ship(helper.shipCoordGen(computerPlayer.getX(),getShipLength(shipName)), helper.randomY(computerPlayer.getY(), getShipLength(shipName)), getShipLength(shipName), helper.randomOrientation(), shipName,shipId));
+    Ship aiShip = computerPlayer.createShip(helper.shipCoordGen(computerPlayer.getX(),getShipLength(shipName)),helper.randomY(computerPlayer.getY(), getShipLength(shipName)), getShipLength(shipName),helper.randomOrientation(), shipName,shipId);
+    testOrientation = computerPlayer.autoAdd(aiShip);
   }while(!testOrientation);
 }
 

@@ -5,6 +5,9 @@ class Game{
 
   vector<Player> playerList;
   Helper helper;
+  vector<vector<string>> shotAreasP1;
+  vector<vector<string>> shotAreasP2;
+
 
   public:
   
@@ -24,21 +27,56 @@ class Game{
     cout << string( 50, '-' );
   }
 
-  void getShot(int playerNumber){
+  bool alreadyShot(vector<string> newShot, int playerNumber){
+    if(playerNumber == 0){
+      for (vector<string> oldCoord : shotAreasP1){
+        if(oldCoord.at(0) == newShot.at(0) && oldCoord.at(1) == newShot.at(1)){
+          return false;
+        }
+      }
+    }else{
+      for (vector<string> oldCoord : shotAreasP2){
+        if(oldCoord.at(0) == newShot.at(0) && oldCoord.at(1) == newShot.at(1)){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  void getShot(int playerNumber, bool ifAuto){
     int shotX;
     string shotY;
-    int maxX = playerList[playerNumber].getX();
-    int maxY = playerList[playerNumber].getY();
-    if (playerList[playerNumber].getPlayerId() < 5){
-      shotX = helper.collectX(maxX);
-      shotY = helper.collectY(maxY);
-    }else{  
-      shotX = helper.shipCoordGen(maxX,0);
-      shotY = helper.randomY(maxY,0);
-    }
+    bool shotLoop = true;
     vector<string> newMissile;
-    newMissile.push_back(shotY);
-    newMissile.push_back(to_string(shotX));
+    do{
+      newMissile.clear();
+      int maxX = playerList[playerNumber].getX();
+      int maxY = playerList[playerNumber].getY();
+      if (ifAuto){
+        shotX = helper.shipCoordGen(maxX,0);
+        shotY = helper.randomY(maxY,0);
+      }else{  
+        shotX = helper.collectX(maxX);
+        shotY = helper.collectY(maxY);
+      }
+      newMissile.push_back(shotY);
+      newMissile.push_back(to_string(shotX));
+
+      if(alreadyShot(newMissile, playerNumber)){
+        shotLoop = false;
+      }
+      else{
+        cout << "\n This area has already been shot at.\n";
+      }
+    }while(shotLoop);
+
+    if(playerNumber == 0){
+      shotAreasP1.push_back(newMissile);
+    }
+    else{
+      shotAreasP2.push_back(newMissile);
+    }
 
     compareShipLists(newMissile, playerNumber);
   }
@@ -52,36 +90,28 @@ class Game{
 
   void compareShipLists(vector<string> missileCoords, int playerNumber){
     playerList[opposite(playerNumber)].missileShot(missileCoords);
-    // int count = 0;
-    // bool found = false;
-    // cout << "\nTEST LOCATION 1\n";
-    // for (Ship firedAtShip : playerList[opposite(playerNumber)].getShipList()){
-    //   cout << "\nTEST LOCATION 2\n";
-    //   for(vector<string> ship : firedAtShip.getShipCoord()){
-    //     cout << "\nTEST LOCATION 3\n";
-    //     if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
-    //       ship[2] = "#";
-    //       cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
-    //       found = true;
-    //     }
-    //   }
-    //   count++;
-    // }
-    // if (!found){
-    //   for(vector<string> &ship : playerList[opposite(playerNumber)].getShipList()[count].getShipCoord()){
-    //     if(ship.at(0) == missileCoords.at(0) && ship.at(0) > missileCoords.at(1)){
-    //       ship[2] = "Ø";
-    //       cout << "\nSHIP MISSED AT: " << ship.at(0) << ship.at(1) << "\n";
-    //     }
-    //   }
-    // }
   }
+
+  // bool checkIfWon(int playerNumber){
+  //   for(Ship shipCheck : playerList[playerNumber].getShipList()){
+  //     for (vector<string> shipIdCheck : shipCheck.getShipCoord()){
+  //       if (shipIdCheck.at(2) != "#" || shipIdCheck.at(2) != "Ø"){
+  //         cout <<"\nCHECKED IF WON\n";
+  //         return false;
+  //       }
+  //     }
+  //   }
+  //   cout <<"\n\n--------------------GAME WON-----------------------\n\n";
+  //   return true;
+  // }
 
 
   void playerTurn(){
     int userChoice;
     int playerNumber = 0;
-    string menuChoices[] = {"Shoot Missile","Quit Game"};
+    bool gameActive = true;
+    bool hasWon = false;
+    string menuChoices[] = {"Shoot Missile","Auto-Shot","Quit"};
     do{
       cout <<"\nPlayer " << playerNumber+1 <<"'s turn\n";
       cout<<"\nThis is your board:\n";
@@ -89,26 +119,44 @@ class Game{
       printLine();
       cout<<"\n\nThis is the other players board:\n";
       playerList[opposite(playerNumber)].printBoard();
-      cout << "\n\nWhere would you like to shoot?\n";
-      vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
-      helper.printMenu(vecOfStr);
 
-      userChoice = helper.userNumberInput();
-      
-      switch(userChoice) {
-        case 1: 
-          getShot(playerNumber);
-          playerNumber = opposite(playerNumber);
-          break;
-        case 0: 
-          cout << "Exiting";
-          break;
-        default:
-        cout << "\n'" << userChoice << "' is an invalid option  - please try again.";
-        break;
+      if(playerList[playerNumber].getPlayerId() >= 5){
+        getShot(playerNumber, true);
+        cout << "\n\nPlease enter 1 to continue from computers turn\n";
+        //userChoice = helper.userNumberInput();
+      }else{
+        cout << "\n\nWhere would you like to shoot?\n";
+        vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
+        helper.printMenu(vecOfStr);
+
+        bool loopCheck = true;
+        do{
+          userChoice = helper.userNumberInput();
+          
+          switch(userChoice) {
+            case 1: 
+              getShot(playerNumber,false);
+              loopCheck = false;
+              break;
+            case 2: 
+              getShot(playerNumber,true);
+              loopCheck = false;
+              break;
+            case 0: 
+              cout << "Exiting";
+              loopCheck = false;
+              gameActive = false;
+              break;
+            default:
+            cout << "\n'" << userChoice << "' is an invalid option  - please try again.";
+            break;
+          }
+        }while (loopCheck);
       }
+      playerNumber = opposite(playerNumber);
+      hasWon = playerList[playerNumber].checkIfWon();
       //helper.clearScreen(); ---------------------------------------------ADD BACK-----------------------
-    }while (userChoice != 0);
+    }while (gameActive || !hasWon);
   }
 
 };

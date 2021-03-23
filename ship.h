@@ -53,17 +53,23 @@ class Ship{
     }
   }
 
+  void checkDestroyed(){
+    vector<string> checkDes;
+    for (vector<string> ship : shipCoord){
+      checkDes.push_back(ship.at(2));
+    }
+    bool check = find(checkDes.begin(), checkDes.end(), shipId) != checkDes.end();
+    if(!check){
+      alive = false;
+      }
+  }
+
   void missileHit(vector<string> missileCoords, bool hitOrMiss){
     int count = 0;
     for(vector<string> shotShip : shipCoord){
       if(shotShip.at(0) == missileCoords.at(0) && shotShip.at(1) == missileCoords.at(1)){
         if(hitOrMiss){
-          cout << "\nSHIP FOUND AT AGAIN: " << shotShip.at(0) << shotShip.at(1) << "\n";
-          getDetails();
           shipCoord.at(count).at(2) = "#";
-        }
-        else{
-          shipCoord.at(count).at(2) = "Ø";
         }
       }
       count++;

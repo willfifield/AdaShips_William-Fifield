@@ -20,17 +20,21 @@ class Player{
   public:
 
   Player(int playerIdInput, int playerTypeInput, int numberOfShips, int playerBombCount){
-      playerId = playerIdInput;
-      playerType = playerTypeInput;
-      numOfShips = numberOfShips;
-      bombs = playerBombCount;
-    }
+    playerId = playerIdInput;
+    playerType = playerTypeInput;
+    numOfShips = numberOfShips;
+    bombs = playerBombCount;
+  }
 
-  vector<Ship> getShipList(){return shipList;};
+  Ship createShip(int userX, string userY, int shipLength, string playerOr, string name, string userShipId){
+    return Ship(userX, userY, shipLength, playerOr, name, userShipId);
+  }
 
-  int getX(){return playerBoard.getX();};
-  int getY(){return playerBoard.getY();};
-  string getYAlpha(int number){return playerBoard.getYAlpha(number);};
+  vector<Ship> getShipList(){return shipList;}
+
+  int getX(){return playerBoard.getX();}
+  int getY(){return playerBoard.getY();}
+  string getYAlpha(int number){return playerBoard.getYAlpha(number);}
 
   void setPlayerId(int id){playerId = id;}
   int getPlayerId(){return playerId;}
@@ -55,28 +59,37 @@ class Player{
   }
 
   void missileShot(vector<string> missileCoords){
-    int count = 0;
     bool found = false;
     for (Ship &firedAtShip : shipList){
       for(vector<string> &ship : firedAtShip.getShipCoord()){
         if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
           firedAtShip.missileHit(missileCoords, true);
-          //ship.at(2) = "#";
           cout << "\nSHIP FOUND AT: " << ship.at(0) << ship.at(1) << "\n";
           found = true;
         }
       }
-      count++;
     }
-    if (!found){
-      for(vector<string> &ship : shipList[count].getShipCoord()){
-        if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
-          shipList[count].missileHit(missileCoords, false);
-          //ship.at(2) = "Ø";
-          cout << "\nSHIP MISSED AT: " << ship.at(0) << ship.at(1) << "\n";
-        }
+    if(!found){//int userX, string userY, int shipLength, string playerOr, string name, string userShipId
+      cout <<"\n"<< missileCoords.at(0) << ": ThIS IS MISSILE 0\n";
+      //int convert = stoi(missileCoords.at(0));
+      addToList(createShip(stoi(missileCoords.at(1)),missileCoords.at(0), 0, "H", "missed","Ø"));
+      //cout << "\nBEYOND IF NOT FOUND\n";
+    }
+  }
+
+  bool checkIfWon(){
+    int winCheck = 0;
+    for(Ship shipCheck : shipList){
+      if (shipCheck.getAlive()){
+        winCheck++;
       }
     }
+    if(winCheck == 0){
+      cout << "\n---------------WINNER--------------\n";
+      return true;
+    }
+    cout << "\n  WINNER CHECK  \n";
+    return false;
   }
 
   void printAllShips(){
@@ -131,7 +144,7 @@ class Player{
   }
 
   void addToList(Ship newShip){
-    if(checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()) ){
+    if( newShip.getName() == "missed" || (checkShipInBoard(newShip.getShipCoord()) && checkShipList(newShip.getName()) && compareShipLists(newShip.getShipCoord()))){ //Not checking "missed" items
       shipList.push_back(newShip);
       newShip.getDetails();
     }else if(!checkShipList(newShip.getName())){

@@ -57,8 +57,11 @@ class Helper{
 
       cin.ignore();
       getline(cin,userChoice);
+      userChoice = uppercaseConvert(userChoice);
+      cout <<"\nUNCONVERTED: " << userChoice <<"\n";
+      cout << "\nCONVERTED: " << uppercaseConvert(userChoice) << "\n";
 
-      if(isLetters(userChoice) && alphaToNum(userChoice) >= 0 && alphaToNum(userChoice) <= yMax){
+      if(isLetters(uppercaseConvert(userChoice)) && alphaToNum(userChoice) >= 0 && alphaToNum(userChoice) <= yMax){
         inputCheck=true;
       }
       else{
@@ -134,32 +137,32 @@ class Helper{
   }
 
   string nth_letter(int n){
-      assert(n >= 1 && n <= 104);
-      if (n>=27 && n<=52){ 
-        string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-26)-1]);
-        return ("A"+ s);
-      }
-      else if (n>=52 && n<=78){ 
-        string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-52)-1]);
-        return ("B"+ s);
-      }
-      else if (n>=78 && n<=104){ 
-        string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-78)-1]);
-        return ("C"+ s);
-      }
-      else{
-        string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[n-1]);
-        return s;
-      }
+    assert(n >= 1 && n <= 104);
+    if (n>=27 && n<=52){ 
+      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-26)-1]);
+      return ("A"+ s);
     }
+    else if (n>=52 && n<=78){ 
+      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-52)-1]);
+      return ("B"+ s);
+    }
+    else if (n>=78 && n<=104){ 
+      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(n-78)-1]);
+      return ("C"+ s);
+    }
+    else{
+      string s(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[n-1]);
+      return s;
+    }
+  }
 
   int generatePickedNumber(int maxNumber) {
-  // generating random number based on random device
-  random_device rdev;
-  mt19937 rgen(rdev());
-  // Distribute by defining a minimum number and max number.
-  uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
-  return idist(rgen);
+    // generating random number based on random device
+    random_device rdev;
+    mt19937 rgen(rdev());
+    // Distribute by defining a minimum number and max number.
+    uniform_int_distribution<int> idist(1, maxNumber); //(inclusive, inclusive)
+    return idist(rgen);
   }
 
   int shipCoordGen(int max, int shipLength){

@@ -47,14 +47,14 @@ This approach allows me to further think, such as input validation, as these ele
   - [x] Validate this coordinate to see if it's already hit. Loop if failing
 - [x] Have the fired shot effect the ship location
 - [ ] Notify if this is a hit or a miss, printing this within the of the other players board (where you're shooting)
-- [ ] Have an auto-fire option using the auto-select function
-  - [ ] Validate again to ensure shots are not wasted on the same already shot at location
-- [ ] Notify where the user has been shot, through their board
-- [ ] Have options to "quit game" and "end turn".
+- [x] Have an auto-fire option using the auto-select function
+  - [x] Validate again to ensure shots are not wasted on the same already shot at location
+- [x] Notify where the user has been shot, through their board
+- [x] Have options to "quit game" and "end turn".
 - [ ] After every turn check if all ships have been destroyed 
   - [ ] If yes, end the game with the winner being shown on the screen
   - [ ] If no, repeat the turn based game until this criteria is filled.
-- [ ] Go back to main-menu when game is complete.
+- [x] Go back to main-menu when game is complete.
 
 # Housekeeping
 - [ ] Refactor code, ensuring there is no duplicate. 
