@@ -134,8 +134,8 @@ class Helper{
       }
       else{
         cout <<"\nPlease enter a valid digit:\n";
-      cin.clear();
-      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
       }
     }while(!inputCheck);
     return userChoice;

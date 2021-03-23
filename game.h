@@ -84,19 +84,25 @@ class Game{
     playerList[helper.opposite(playerNumber)].missileShot(missileCoords);
   }
 
+  void printKey(){
+    cout <<"\n\t\033[1;31m"<< "#" <<"\033[0m" << ": Ship Hit\t\t\t";
+    cout <<"\033[1;33m"<< "Ø" <<"\033[0m" << ": Ship Missed\t\n";
+  }
+
   void playerTurn(){
     int userChoice;
     int playerNumber = 0;
     bool gameActive = true;
     string menuChoices[] = {"Shoot Missile","Auto-Shot","Quit"};
     do{
+      helper.clearScreen();
       cout <<"\nPlayer " << playerNumber+1 <<"'s turn\n";
       cout<<"\nThis is your board:\n";
       playerList[playerNumber].printBoard(true);
       printLine();
       cout<<"\n\nThis is the other players board:\n";
       playerList[helper.opposite(playerNumber)].printBoard(false);
-
+      printKey();
       if(playerList[playerNumber].getPlayerId() >= 5){
         getShot(playerNumber, true);
         cout << "\n\nPlease enter 1 to continue from computers turn\n";

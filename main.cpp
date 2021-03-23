@@ -1,3 +1,9 @@
+/*
+This is a main class.
+
+This class is where 
+*/
+
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -118,6 +124,16 @@ void generateAiShips(Player &computerPlayer, string shipName){
 
 void computerGenerate(Player &computerPlayer){
   vector<string> computerList = readShipsAvalible();
+  vector<string> currentList = computerPlayer.returnShipNames();
+  int count = 0;
+  for(string ship : computerPlayer.returnShipNames()){
+    for (string shipName : computerList){
+      if (shipName == ship){
+        computerList.erase(computerList.begin() + count);
+      }
+      count++;
+    }
+  }
   for (string shipName : computerList){
     generateAiShips(computerPlayer, shipName);
   }
@@ -163,7 +179,7 @@ bool setupGame(int player1, int player2){
         }
         break;
       case 2: 
-        if(!placed){
+        if(!placed || playerList[playerNumber].getShipList().size() < shipsAvalible.size()){
           cout << "\nAuto-place\n";
           uniquePlayer1Id = 0;
           computerGenerate(playerList[playerNumber]);

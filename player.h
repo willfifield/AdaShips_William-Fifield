@@ -160,6 +160,14 @@ class Player{
     }
   }
 
+  vector<string> returnShipNames(){
+    vector<string> activeShipNames;
+    for(Ship ship : shipList){
+      activeShipNames.push_back(ship.getName());
+    }
+    return activeShipNames;
+  }
+
   void resetBoard(){
     shipList.clear();
   }
