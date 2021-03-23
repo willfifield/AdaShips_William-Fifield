@@ -9,6 +9,7 @@
 #include "ini.h"
 #include "helper.h"
 #include "player.h"
+#include "game.h"
 
 using namespace std;
 
@@ -18,101 +19,6 @@ vector<Player> playerList;
 vector<string> shipsAvalible;
 int uniquePlayer1Id;
 int uniquePlayer2Id;
-
-void clearScreen(){
-    cout << string( 100, '\n' );
-  }
-
-void printMenu(vector<string> choices){
-  cout << "\n\nPlease enter one of the options below:\n";
-  int count = 1;
-  for (string choice : choices){
-    if (choice == "Quit" || choice == "Back"){
-      cout <<"0: " << choice << "\n";
-    }
-    else{
-      cout <<count << ": " << choice << "\n";
-    count++;
-    }
-  }
-}
-
-int collectX(Player currentPlayer){
-  bool inputCheck = false;
-  int userChoice;
-  do{
-    cout << "\nPlease enter your X coordinates (1,2,3...): ";
-
-    userChoice = helper.userNumberInput();
-
-    if(userChoice >= 1 && userChoice <= currentPlayer.getX()){
-      inputCheck=true;
-    }
-    else{
-      cout << "\nPlease enter a valid coordinate:";
-    }
-  }while (!inputCheck);
-  return userChoice;
-}
-
-bool isLetters(string input)
-{
-	for (int i = 0; i < input.size(); i++)
-	{
-		int uppercaseChar = toupper(input[i]); //converting the character to upper case
-		if (uppercaseChar < 'A' || uppercaseChar > 'Z') //if character is not A-Z
-		{
-			return false;
-		}
-	}
-	return true; //Return true if characters within A-Z
-}
-
-string uppercaseConvert(string toConvert){
-  string converted = toConvert;
-  transform(converted.begin(), converted.end(), converted.begin(),[](unsigned char c){ return toupper(c);});
-  return converted;
-}
-
-
-string collectY(Player currentPlayer){
-  bool inputCheck = false;
-  string userChoice;
-  do{
-    cout << "\nPlease enter your Y coordinates (A,B,C...): ";
-
-    cin.ignore();
-    getline(cin,userChoice);
-
-    if(isLetters(userChoice)){
-      inputCheck=true;
-    }
-    else{
-      cout << "\nPlease enter a valid coordinate:";
-    }
-  }while (!inputCheck);
-  return uppercaseConvert(userChoice);
-}
-
-string collectOr(Player currentPlayer){
-  bool inputCheck = false;
-  string userChoice;
-  do{
-    cout << "\nPlease enter your Orientation Horizontal/Vertical (H / V): ";
-
-    getline(cin,userChoice);
-    cout <<userChoice;
-    userChoice = uppercaseConvert(userChoice);
-
-    if(isLetters(userChoice) && (userChoice == "H" || userChoice == "V")){
-      inputCheck=true;
-    }
-    else{
-      cout << "\nPlease enter a valid orientation:";
-    }
-  }while (!inputCheck);
-  return userChoice;
-}
 
 mINI::INIStructure GetSettingsFile(){
   mINI::INIFile file("adaship_config.ini"); // create a file instance
@@ -132,9 +38,9 @@ int getBoardFile(string coord){
 }
 
 void placeShip(string shipName, Player &currentPlayer){
-  int playerX = collectX(currentPlayer);
-  string playerY = collectY(currentPlayer);
-  string playerOr = collectOr(currentPlayer);
+  int playerX = helper.collectX(currentPlayer.getX());
+  string playerY = helper.collectY(currentPlayer.getY());
+  string playerOr = helper.collectOr();
   int shipLength = getShipLength(shipName);
   string shipId = to_string(uniquePlayer1Id++);
   currentPlayer.addToList(Ship(playerX, playerY, shipLength, playerOr, shipName,shipId));
@@ -164,7 +70,7 @@ void placeShipsMenu(Player &currentPlayer){
 
   do{
     cout << "\n\nWhich Ships would you like to place?\n";
-    printMenu(ships);
+    helper.printMenu(ships);
 
     userChoice = helper.userNumberInput();
     
@@ -217,9 +123,9 @@ void computerGenerate(Player &computerPlayer){
 }
 
 
-bool setupGame(){
-  playerList.push_back(Player(1,1,5,0));
-  playerList.push_back(Player(5,0,5,0));
+bool setupGame(int player1, int player2){
+  playerList.push_back(Player(player1,1,5,0));
+  playerList.push_back(Player(player2,0,5,0));
   playerList[0].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   playerList[1].createBoard(getBoardFile("sizex"), getBoardFile("sizey"));
   shipsAvalible = readShipsAvalible();
@@ -236,7 +142,7 @@ bool setupGame(){
     cout << "\n\nGame Set-up\n\n";
     playerList[0].printBoard();
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
-    printMenu(vecOfStr);
+    helper.printMenu(vecOfStr);
     
     userChoice = helper.userNumberInput();
     
@@ -279,8 +185,7 @@ bool setupGame(){
 }
 
 void playGame(){
-  cout << "PLAY GAME";
-
+  Game Game(playerList);
 }
 
 void mainMenu(){
@@ -289,14 +194,14 @@ void mainMenu(){
   do{
     cout << "\n\nWelcome to the AdaShips\n";
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
-    printMenu(vecOfStr);
+    helper.printMenu(vecOfStr);
 
     userChoice = helper.userNumberInput();
     
     switch(userChoice) {
 			case 1: 
-        clearScreen();
-        if(setupGame()){
+        helper.clearScreen();
+        if(setupGame(1,5)){
           playGame();
         }
         break;

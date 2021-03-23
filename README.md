@@ -23,7 +23,11 @@ An updated UML will be published here when the project is complete. This will al
 
 
 
-# Breakdown of Tasks to complete
+# Breakdown of Tasks to complete - Work Plan
+This is the breakkdown and plan of how I will take on this project. I have broken tasks down into steps, of which when fully completed there will be a working game.
+
+This approach allows me to further think, such as input validation, as these elemts will be used multiple times within the project.
+
 - [x] Create a main-menu system
   - [x] going to sub-menu
 - [x] ~~User a map (map[[0,0],[0,0]]) to build and print out a boards~~
