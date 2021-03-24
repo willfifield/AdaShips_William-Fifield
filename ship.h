@@ -90,7 +90,6 @@ class Ship{
     else{
       alive = true;
     }
-    
     placed = true;
     generateCoords();
   }

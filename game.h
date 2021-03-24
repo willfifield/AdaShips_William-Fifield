@@ -10,22 +10,19 @@ class Game{
 
   public:
   
+  // Starting the game function, setting the players so we can refernece them easily
   Game (vector<Player> &newPlayerList){
     playerList = newPlayerList;
     playerTurn();
   }
 
-  void printPlayers(){
-    for (Player player: playerList){
-      player.printAllShips();
-    }
-  }
-
+  // A nice to have, this function puts a seperation line in the console
   void printLine(){
     cout << "\n";
     cout << string( 50, '-' );
   }
 
+  // This is checking if a location has already been shot, using local vectors for each player
   bool alreadyShot(vector<string> newShot, int playerNumber){
     if(playerNumber == 0){
       for (vector<string> oldCoord : shotAreasP1){
@@ -43,6 +40,7 @@ class Game{
     return true;
   }
 
+  // This get shot function uses the players identifier, and an AI option to decide of where to shoot. Using the helper method for collecting x and y, and the auto generator also in the helper. Whilst in a loop, this will ensure that the shot isn't a duplicate, and will be asked again until a valid answer is given. Once it is, it adds it to 
   void getShot(int playerNumber, bool ifAuto){
     int shotX;
     string shotY;
@@ -76,7 +74,6 @@ class Game{
     else{
       shotAreasP2.push_back(newMissile);
     }
-
     compareShipLists(newMissile, playerNumber);
   }
 
@@ -101,7 +98,7 @@ class Game{
       playerList[playerNumber].printBoard(true);
       printLine();
       cout<<"\n\nThis is the other players board:\n";
-      playerList[helper.opposite(playerNumber)].printBoard(false);
+      playerList[helper.opposite(playerNumber)].printBoard(false);// CHANGE THIS TO TRUE TO SEE OTHER PLAYERS SHIPS
       printKey();
       if(playerList[playerNumber].getPlayerId() >= 5){
         getShot(playerNumber, true);

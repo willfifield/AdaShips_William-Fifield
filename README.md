@@ -19,7 +19,9 @@ Please follow the link below to see the mock design UML for the project. This gi
 
 https://docs.google.com/drawings/d/1H_1S100Jxa762ZXFiUBqWA2gCyhnFs1ICksuH77g2ao/edit?usp=sharing
 
-An updated UML will be published here when the project is complete. This will allow the whole project to be seen in this way. 
+An updated UML is posted below, allowing the whole project to be seen in this way. This detail UML diagram includes the whole project in greater detail.
+
+https://drive.google.com/file/d/1Or53_4oIGGS_oCJcN9_8N7WlzYXksh0Q/view?usp=sharing
 
 
 

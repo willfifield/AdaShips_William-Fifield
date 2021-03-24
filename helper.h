@@ -13,6 +13,7 @@ class Helper{
       return (int)x - 64;
     }
 
+  //This is validating that an input is an allowed character
   bool isLetters(string input){
     for (int i = 0; i < input.size(); i++){
       int uppercaseChar = toupper(input[i]); //converting the character to upper case
@@ -23,6 +24,7 @@ class Helper{
     return true; //Return true if characters within A-Z
   }
 
+  //This converts the input string to all uppercase, by iterating through the string
   string uppercaseConvert(string toConvert){
     string converted = toConvert;
     transform(converted.begin(), converted.end(), converted.begin(),[](unsigned char c){ return toupper(c);});
@@ -31,6 +33,7 @@ class Helper{
 
   public:
 
+  // This is a simple function used to switch between players. It is used multiple times in the project, as to why it is now in the helper class
   int opposite(int toSwap){
     if(toSwap==0){
       return 1;
@@ -38,13 +41,14 @@ class Helper{
     return 0;
   }
 
+  //collect X is self explanitory, validating the input int with the max/min size of the board
   int collectX(int xMax){
     bool inputCheck = false;
     int userChoice;
     do{
       cout << "\nPlease enter your X coordinates (1,2,3...): ";
 
-      userChoice = userNumberInput();
+      userChoice = userNumberInput();// This uses another class to validate that the input is a number
 
       if(userChoice >= 1 && userChoice <= xMax){
         inputCheck=true;
@@ -56,6 +60,7 @@ class Helper{
     return userChoice;
   }
 
+  // collect Y is self explanitory again, validating the input string, ensuring it's within the min/max of the board
   string collectY(int yMax){
     bool inputCheck = false;
     string userChoice;
@@ -76,6 +81,7 @@ class Helper{
     return uppercaseConvert(userChoice);
   }
 
+  // Again used multiple times in the code, this orientation selector has only 2 valid options, using similar methods as the "collectY"
   string collectOr(){
     bool inputCheck = false;
     string userChoice;
@@ -95,11 +101,13 @@ class Helper{
     }while (!inputCheck);
     return userChoice;
   }
-
+  
+  // A very simple clear screen method, allowing the user to see their board on the screen, with no clutter above
   void clearScreen(){
     cout << string( 100, '\n' );
   }
 
+  // This print menu system is used throughout the project. It allows an list to be put in, and those being the options for the menu. This saves time printing each menu every time
   void printMenu(vector<string> choices){
     cout << "\n\nPlease enter one of the options below:\n";
     int count = 1;
@@ -114,6 +122,7 @@ class Helper{
     }
   }
 
+  // Another simple method, turning the inputted string to an int. This uses ACSII
   int alphaToNum(string toConvert){
     int converted;
     for (unsigned int i = 0; i < toConvert.length(); i++)
@@ -123,6 +132,8 @@ class Helper{
     return converted;
   }
 
+
+  // This is a generic int validator, allowing the user to only enter valid digits
   int userNumberInput(){
     int userChoice;
     bool inputCheck = false;
@@ -141,6 +152,7 @@ class Helper{
     return userChoice;
   }
 
+  //This is an alphabet approach, again to be used more further along in the project. This is how the board Y axis is printed
   string nth_letter(int n){
     assert(n >= 1 && n <= 104);
     if (n>=27 && n<=52){ 
@@ -161,6 +173,7 @@ class Helper{
     }
   }
 
+  // Using "random_device", I'm able to get a random number. As this is used in different ways, the number it is between is inputted, allowing me to have the max range custom
   int generatePickedNumber(int maxNumber) {
     // generating random number based on random device
     random_device rdev;
@@ -170,23 +183,26 @@ class Helper{
     return idist(rgen);
   }
 
+  // Using the above method, this random generator allows the player to generate a coordinate using the board size
   int shipCoordGen(int max, int shipLength){
     int random;
     do{
-      random = generatePickedNumber(max);
+      random = generatePickedNumber(max);// Going to the random function
     }while(random > (max-shipLength));
     return random;
   }
 
+  // Even more simple, this method returns one of two options: Horizontal or Vertical, using the random method
   string randomOrientation(){
-    int random = generatePickedNumber(2);
+    int random = generatePickedNumber(2); // Using random method
     if(random == 1){return "H";}
     else {return "V";}
   }
 
+  // This randon Y method is similar to the above, but converts the return using another method inside of this class
   string randomY(int maxNumber, int length){
-    int random = shipCoordGen(maxNumber,length);
-    return nth_letter(random);
+    int random = shipCoordGen(maxNumber,length);// Using random method
+    return nth_letter(random);// Using "to alphabet" method
   }
 
 };
