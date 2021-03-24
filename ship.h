@@ -4,6 +4,9 @@ This is the Ship Object.
 Due to having multiple ships, an object would be best suited for this as it allows many to be created, with the same variables required. Inside of this class you will find the complete coordinates for the ship (due to length), along with other key variables, such as "alive" and "shipName"
 */
 
+#include <thread>
+#include <chrono>
+
 using namespace std;
 
 class Ship{
@@ -69,6 +72,10 @@ class Ship{
     }
     bool check = find(checkDes.begin(), checkDes.end(), shipId) != checkDes.end();
     if(!check){
+      if(alive){
+        cout << "\nYou've sunk the: " << shipName <<"!\n";
+        this_thread::sleep_for (chrono::seconds(2));// This is displaying the current ships that the player has sunk
+      }
       alive = false;
     }
   }
