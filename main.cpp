@@ -146,6 +146,25 @@ void computerGenerate(Player &computerPlayer){
   }
 }
 
+//This is the for loop of how the program checks to see what ships they have left to palce
+void shipsLeftToPlace(Player &computerPlayer){
+  cout <<"\n\nCurrent non-placed ships:\n";
+  vector<string> computerList = readShipsAvalible();
+  vector<string> currentList = computerPlayer.returnShipNames();
+  int count = 0;
+  for(string ship : computerPlayer.returnShipNames()){
+    for (string shipName : computerList){
+      if (shipName == ship){
+        computerList.erase(computerList.begin() + count);
+      }
+      count++;
+    }
+  }
+  for (string shipName : computerList){
+    cout << "\t" << shipName << "\n" ;
+  }
+}
+
 // The main setting-up menu, in here the player objects are created, along with their boards. This function will repeat until the user either continues with the game, or quits. There is polymorphism in this class, allowing both for 1 real player vs computer, and then 1 real player vs another real player.
 bool setupGame(int player1, int player2){
   playerList.push_back(Player(player1,1,5,0));
@@ -171,6 +190,9 @@ bool setupGame(int player1, int player2){
     cout << "\n\nGame Set-up\n";
     cout << "Player "<< playerNumber+1 <<"\n\n";
     playerList[playerNumber].printBoard(true);// This "true" allows the user to see their board. This is key for battleships gameplay, as traditionally you can't see the other players ships.
+    if(playerList[playerNumber].getShipList().size() <= shipsAvalible.size()){
+      shipsLeftToPlace(playerList[playerNumber]);
+    }
     vector <string> vecOfStr(menuChoices,menuChoices +sizeof(menuChoices) / sizeof(string));
     helper.printMenu(vecOfStr);
     
