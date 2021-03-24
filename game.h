@@ -115,15 +115,19 @@ class Game{
         bool loopCheck = true;
         do{
           userChoice = helper.userNumberInput();
-          
+          int userContinue;
           switch(userChoice) {
             case 1: 
               getShot(playerNumber,false);
               loopCheck = false;
+              cout << "\n\nPlease enter 1 to continue from your turn\n";
+              userContinue = helper.userNumberInput();//Collect user continue
               break;
             case 2: 
               getShot(playerNumber,true);
               loopCheck = false;
+              cout << "\n\nPlease enter 1 to continue from your turn\n";
+              userContinue = helper.userNumberInput();
               break;
             case 0: 
               cout << "Exiting";
