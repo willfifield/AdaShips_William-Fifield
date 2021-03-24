@@ -40,7 +40,7 @@ class Game{
     return true;
   }
 
-  // This get shot function uses the players identifier, and an AI option to decide of where to shoot. Using the helper method for collecting x and y, and the auto generator also in the helper. Whilst in a loop, this will ensure that the shot isn't a duplicate, and will be asked again until a valid answer is given. Once it is, it adds it to 
+  // This get shot function uses the players identifier, and an AI option to decide of where to shoot. Using the helper method for collecting x and y, and the auto generator also in the helper. Whilst in a loop, this will ensure that the shot isn't a duplicate, and will be asked again until a valid answer is given. Once it is, it adds it to the local list, and also that players ship list, so it can be shown in the board.
   void getShot(int playerNumber, bool ifAuto){
     int shotX;
     string shotY;
@@ -77,15 +77,18 @@ class Game{
     compareShipLists(newMissile, playerNumber);
   }
 
+  // This function sends the missile to the opposites player object, checking if it has hit any of the opponents ships
   void compareShipLists(vector<string> missileCoords, int playerNumber){
     playerList[helper.opposite(playerNumber)].missileShot(missileCoords);
   }
 
+  // A simple key for the user to see what to look out for in the board. These are coloured also, like they are when on the active board
   void printKey(){
     cout <<"\n\t\033[1;31m"<< "#" <<"\033[0m" << ": Ship Hit\t\t\t";
     cout <<"\033[1;33m"<< "Ø" <<"\033[0m" << ": Ship Missed\t\n";
   }
 
+  // Another menu system, flicking between the two players. This menu is build to be expandable, with the later tasks. In this we print both ours and the opponents board (hiding the opponents ships), validating shots (from player or computer), and can be played with 2 human players with no changes to the code. This will loop over and over until the win condition is met, which is all ships of the opponent has been destroyed
   void playerTurn(){
     int userChoice;
     int playerNumber = 0;
@@ -137,9 +140,8 @@ class Game{
       if(playerList[playerNumber].checkIfWon()){
         gameActive = false;
       }
-      //helper.clearScreen(); ---------------------------------------------ADD BACK-----------------------
     }while (gameActive);
-
+    // Congratulating the player who wins the game
     cout << "\n\nCongratulations Player " << helper.opposite(playerNumber)+1 <<", you WON!\n\n";
   }
 

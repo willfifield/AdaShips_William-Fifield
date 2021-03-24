@@ -1,3 +1,11 @@
+/*
+This is a Player Object.
+
+This is the main class where unique attributes to the player will be stored. Within this you will see the board and the list of ships. This class can be used both for ai and a human player
+*/
+#include <thread>
+#include <chrono>
+
 using namespace std;
 
 #include "board.h"
@@ -70,11 +78,15 @@ class Player{
       for(vector<string> &ship : firedAtShip.getShipCoord()){
         if(ship.at(0) == missileCoords.at(0) && ship.at(1) == missileCoords.at(1)){
           firedAtShip.missileHit(missileCoords, true);
+          cout << "\nMissile hit at coordinates: " << missileCoords.at(0) << missileCoords.at(1) <<"\n";
+          this_thread::sleep_for (chrono::seconds(3));
           found = true;
         }
       }
     }
     if(!found){
+      cout << "\nMissile missed at coordinates: " << missileCoords.at(0) << missileCoords.at(1) <<"\n";
+      this_thread::sleep_for (chrono::seconds(3));
       addToList(createShip(stoi(missileCoords.at(1)),missileCoords.at(0), 0, "H", "missed","Ø"));
     }
   }

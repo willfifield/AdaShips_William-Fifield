@@ -62,4 +62,4 @@ This approach allows me to further think, such as input validation, as these ele
 - [x] Refactor code, ensuring there is no duplicate. 
   - [x] If there is duplicate, see where it is best to be stored, and use OOP functionality.
 - [x] Remove any "code smells", ensuring code is easy and efficient
-- [ ] Ensure the code is well commented, explaining what classes/functions/code does within the software. Make it readable, as if a document were to be made from it and you can understand the whole project through this C++ comment doc.
+- [x] Ensure the code is well commented, explaining what classes/functions/code does within the software. Make it readable, as if a document were to be made from it and you can understand the whole project through this C++ comment doc.

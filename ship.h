@@ -1,3 +1,9 @@
+/*
+This is the Ship Object.
+
+Due to having multiple ships, an object would be best suited for this as it allows many to be created, with the same variables required. Inside of this class you will find the complete coordinates for the ship (due to length), along with other key variables, such as "alive" and "shipName"
+*/
+
 using namespace std;
 
 class Ship{
@@ -17,6 +23,7 @@ class Ship{
 
   public:
 
+  // getDetails is a de-bugging function, allowing me to see this paricular ships key details
   void getDetails(){
     cout <<"\nUser X: " << xCoord << "\nUser Y: " << yCoord << "\nOrientation: " << orientation << "\nLength: " << length <<"\n";
     for(vector<string> coordx : shipCoord){
@@ -27,6 +34,7 @@ class Ship{
     }
   }
 
+  // This function is key for having the ship act as a ship, with the length of the ship in mind. Here we check which the orienation is, and place the following coordinates for that. Here we can go beyond the board limits, but it will be caught by the player create ship function.
   void generateCoords(){
     vector<string> tempCoords;
     tempCoords.push_back(yCoord);
@@ -53,6 +61,7 @@ class Ship{
     }
   }
 
+  // Check destroyed is a main function to the game, checking the internal coordinates and making sure they haven't all been hit. If they have, the ship is no longer "alive", so it will set it's private variable to false
   void checkDestroyed(){
     vector<string> checkDes;
     for (vector<string> ship : shipCoord){
@@ -64,6 +73,7 @@ class Ship{
     }
   }
 
+  // If a missile hits the ship, it replaces the id of that hit location with a hit marker, which can be displayed on the board. This marker allows us to count if the ship is destroyed or not
   void missileHit(vector<string> missileCoords, bool hitOrMiss){
     int count = 0;
     for(vector<string> shotShip : shipCoord){
@@ -76,7 +86,7 @@ class Ship{
     }
   }
   
-
+  // A ship initialization function, allowing external classes, like player, to create multiple instances of this class. This is key to this game as both player sides have multiple ships
   Ship(int userX, string userY, int shipLength, string playerOr, string name, string userShipId){
     xCoord = userX;
     yCoord = userY;
@@ -94,6 +104,7 @@ class Ship{
     generateCoords();
   }
 
+  // Here are some standard getter functions. These are used to access the private variables of this class (such as shipCoord), and use that data for another funciton to test against
   string getName(){return shipName;}
   bool getAlive(){return alive;}
   bool getPlaced(){return placed;}
